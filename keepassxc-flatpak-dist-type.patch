@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e6d4270c..8408d8e8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -57,11 +57,13 @@ set(KEEPASSXC_VERSION "${KEEPASSXC_VERSION_MAJOR}.${KEEPASSXC_VERSION_MINOR}.${K
+ # Distribution info
+ set(KEEPASSXC_DIST True)
+ set(KEEPASSXC_DIST_TYPE "Other" CACHE STRING "KeePassXC Distribution type")
+-set_property(CACHE KEEPASSXC_DIST_TYPE PROPERTY STRINGS Snap AppImage Other)
++set_property(CACHE KEEPASSXC_DIST_TYPE PROPERTY STRINGS Snap AppImage Flatpak Other)
+ if(KEEPASSXC_DIST_TYPE STREQUAL "Snap")
+   set(KEEPASSXC_DIST_SNAP True)
+ elseif(KEEPASSXC_DIST_TYPE STREQUAL "AppImage")
+   set(KEEPASSXC_DIST_APPIMAGE True)
++elseif(KEEPASSXC_DIST_TYPE STREQUAL "Flatpak")
++  set(KEEPASSXC_DIST_FLATPAK True)
+ elseif(KEEPASSXC_DIST_TYPE STREQUAL "Other")
+   unset(KEEPASSXC_DIST)
+ endif()
+diff --git a/src/config-keepassx.h.cmake b/src/config-keepassx.h.cmake
+index 5a00a5db..f5f95709 100644
+--- a/src/config-keepassx.h.cmake
++++ b/src/config-keepassx.h.cmake
+@@ -22,6 +22,7 @@
+ #cmakedefine KEEPASSXC_DIST_TYPE "@KEEPASSXC_DIST_TYPE@"
+ #cmakedefine KEEPASSXC_DIST_SNAP
+ #cmakedefine KEEPASSXC_DIST_APPIMAGE
++#cmakedefine KEEPASSXC_DIST_FLATPAK
+ 
+ #cmakedefine HAVE_PR_SET_DUMPABLE 1
+ #cmakedefine HAVE_RLIMIT_CORE 1

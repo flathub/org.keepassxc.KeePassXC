@@ -36,7 +36,8 @@
         "-DCMAKE_BUILD_TYPE=Release",
         "-DWITH_XC_AUTOTYPE=ON",
         "-DWITH_XC_HTTP=ON",
-        "-DWITH_XC_YUBIKEY=ON"
+        "-DWITH_XC_YUBIKEY=ON",
+        "-DKEEPASSXC_DIST_TYPE=Flatpak"
       ],
       "sources": [
         {
@@ -48,6 +49,10 @@
           /* id is still broken in appdata */
           "type": "patch",
           "path": "keepassxc-id-fix.patch"
+        },
+        {
+          "type": "patch",
+          "path": "keepassxc-flatpak-dist-type.patch"
         }
       ],
       "post-install": [

@@ -1,0 +1,320 @@
+diff --git a/COPYING b/COPYING
+index 403e4564..74e745de 100644
+--- a/COPYING
++++ b/COPYING
+@@ -59,14 +59,14 @@ Files: cmake/CodeCoverage.cmake
+ Copyright: 2012 - 2015, Lars Bilke
+ License: BSD-3-clause
+ 
+-Files: share/icons/application/*/apps/keepassxc.png
+-       share/icons/application/scalable/apps/keepassxc.svgz
+-       share/icons/application/*/apps/keepassxc-dark.png
+-       share/icons/application/scalable/apps/keepassxc-dark.svgz
+-       share/icons/application/*/apps/keepassxc-locked.png
+-       share/icons/application/scalable/apps/keepassxc-locked.svgz
+-       share/icons/application/*/apps/keepassxc-unlocked.png
+-       share/icons/application/scalable/apps/keepassxc-unlocked.svgz
++Files: share/icons/application/*/apps/org.keepassxc.KeePassXC.png
++       share/icons/application/scalable/apps/org.keepassxc.KeePassXC.svgz
++       share/icons/application/*/apps/org.keepassxc.KeePassXC.dark.png.png
++       share/icons/application/scalable/apps/org.keepassxc.KeePassXC.dark.png.svgz
++       share/icons/application/*/apps/org.keepassxc.KeePassXC.locked.png.png
++       share/icons/application/scalable/apps/org.keepassxc.KeePassXC.locked.png.svgz
++       share/icons/application/*/apps/org.keepassxc.KeePassXC.unlocked.png.png
++       share/icons/application/scalable/apps/org.keepassxc.KeePassXC.unlocked.png.svgz
+        share/icons/application/*/mimetypes/application-x-keepassxc.png
+        share/icons/application/scalable/mimetypes/application-x-keepassxc.svgz
+ Copyright: 2016, Lorenzo Stella <lorenzo.stl@gmail.com>
+diff --git a/share/CMakeLists.txt b/share/CMakeLists.txt
+index 81bb2693..5316ae0d 100644
+--- a/share/CMakeLists.txt
++++ b/share/CMakeLists.txt
+@@ -25,7 +25,7 @@ install(FILES ${DATABASE_ICONS} DESTINATION ${DATA_INSTALL_DIR}/icons/database)
+ 
+ if(UNIX AND NOT APPLE)
+     install(DIRECTORY icons/application/ DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor
+-            FILES_MATCHING PATTERN "keepassx*.png" PATTERN "keepassx*.svgz"
++	    FILES_MATCHING PATTERN "org.keepassxc.KeePassXC*.png" PATTERN "org.keepassxc.KeePassXC*.svgz"
+             PATTERN "status" EXCLUDE PATTERN "actions" EXCLUDE PATTERN "categories" EXCLUDE)
+     install(DIRECTORY icons/application/ DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor
+             FILES_MATCHING PATTERN "application-x-keepassxc.png" PATTERN "application-x-keepassxc.svgz"
+@@ -45,67 +45,67 @@ install(DIRECTORY icons/application/ DESTINATION ${DATA_INSTALL_DIR}/icons/appli
+ add_custom_target(icons
+                   # SVGZ to PNGs for KeePassXC
+                   COMMAND inkscape -z -w 16 -h 16
+-                    icons/application/scalable/apps/keepassxc.svgz -e icons/application/16x16/apps/keepassxc.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.svgz -e icons/application/16x16/apps/org.keepassxc.KeePassXC.png
+                   COMMAND inkscape -z -w  24 -h 24
+-                    icons/application/scalable/apps/keepassxc.svgz -e icons/application/24x24/apps/keepassxc.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.svgz -e icons/application/24x24/apps/org.keepassxc.KeePassXC.png
+                   COMMAND inkscape -z -w  32 -h 32
+-                    icons/application/scalable/apps/keepassxc.svgz -e icons/application/32x32/apps/keepassxc.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.svgz -e icons/application/32x32/apps/org.keepassxc.KeePassXC.png
+                   COMMAND inkscape -z -w 48 -h 48
+-                    icons/application/scalable/apps/keepassxc.svgz -e icons/application/48x48/apps/keepassxc.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.svgz -e icons/application/48x48/apps/org.keepassxc.KeePassXC.png
+                   COMMAND inkscape -z -w 64 -h 64
+-                    icons/application/scalable/apps/keepassxc.svgz -e icons/application/64x64/apps/keepassxc.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.svgz -e icons/application/64x64/apps/org.keepassxc.KeePassXC.png
+                   COMMAND inkscape -z -w 128 -h 128
+-                    icons/application/scalable/apps/keepassxc.svgz -e icons/application/128x128/apps/keepassxc.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.svgz -e icons/application/128x128/apps/org.keepassxc.KeePassXC.png
+                   COMMAND inkscape -z -w 256 -h 256
+-                    icons/application/scalable/apps/keepassxc.svgz -e icons/application/256x256/apps/keepassxc.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.svgz -e icons/application/256x256/apps/org.keepassxc.KeePassXC.png
+ 
+                   # SVGZ to PNGs for KeePassXC
+                   COMMAND inkscape -z -w 16 -h 16
+-                    icons/application/scalable/apps/keepassxc-dark.svgz -e icons/application/16x16/apps/keepassxc-dark.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.dark.svgz -e icons/application/16x16/apps/org.keepassxc.KeePassXC.dark.png
+                   COMMAND inkscape -z -w  24 -h 24
+-                    icons/application/scalable/apps/keepassxc-dark.svgz -e icons/application/24x24/apps/keepassxc-dark.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.dark.svgz -e icons/application/24x24/apps/org.keepassxc.KeePassXC.dark.png
+                   COMMAND inkscape -z -w  32 -h 32
+-                    icons/application/scalable/apps/keepassxc-dark.svgz -e icons/application/32x32/apps/keepassxc-dark.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.dark.svgz -e icons/application/32x32/apps/org.keepassxc.KeePassXC.dark.png
+                   COMMAND inkscape -z -w 48 -h 48
+-                    icons/application/scalable/apps/keepassxc-dark.svgz -e icons/application/48x48/apps/keepassxc-dark.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.dark.svgz -e icons/application/48x48/apps/org.keepassxc.KeePassXC.dark.png
+                   COMMAND inkscape -z -w 64 -h 64
+-                    icons/application/scalable/apps/keepassxc-dark.svgz -e icons/application/64x64/apps/keepassxc-dark.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.dark.svgz -e icons/application/64x64/apps/org.keepassxc.KeePassXC.dark.png
+                   COMMAND inkscape -z -w 128 -h 128
+-                    icons/application/scalable/apps/keepassxc-dark.svgz -e icons/application/128x128/apps/keepassxc-dark.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.dark.svgz -e icons/application/128x128/apps/org.keepassxc.KeePassXC.dark.png
+                   COMMAND inkscape -z -w 256 -h 256
+-                    icons/application/scalable/apps/keepassxc-dark.svgz -e icons/application/256x256/apps/keepassxc-dark.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.dark.svgz -e icons/application/256x256/apps/org.keepassxc.KeePassXC.dark.png
+ 
+                   # SVGZ to PNGs for KeePassXC
+                   COMMAND inkscape -z -w 16 -h 16
+-                    icons/application/scalable/apps/keepassxc-locked.svgz -e icons/application/16x16/apps/keepassxc-locked.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.locked.svgz -e icons/application/16x16/apps/org.keepassxc.KeePassXC.locked.png
+                   COMMAND inkscape -z -w  24 -h 24
+-                    icons/application/scalable/apps/keepassxc-locked.svgz -e icons/application/24x24/apps/keepassxc-locked.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.locked.svgz -e icons/application/24x24/apps/org.keepassxc.KeePassXC.locked.png
+                   COMMAND inkscape -z -w  32 -h 32
+-                    icons/application/scalable/apps/keepassxc-locked.svgz -e icons/application/32x32/apps/keepassxc-locked.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.locked.svgz -e icons/application/32x32/apps/org.keepassxc.KeePassXC.locked.png
+                   COMMAND inkscape -z -w 48 -h 48
+-                    icons/application/scalable/apps/keepassxc-locked.svgz -e icons/application/48x48/apps/keepassxc-locked.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.locked.svgz -e icons/application/48x48/apps/org.keepassxc.KeePassXC.locked.png
+                   COMMAND inkscape -z -w 64 -h 64
+-                    icons/application/scalable/apps/keepassxc-locked.svgz -e icons/application/64x64/apps/keepassxc-locked.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.locked.svgz -e icons/application/64x64/apps/org.keepassxc.KeePassXC.locked.png
+                   COMMAND inkscape -z -w 128 -h 128
+-                    icons/application/scalable/apps/keepassxc-locked.svgz -e icons/application/128x128/apps/keepassxc-locked.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.locked.svgz -e icons/application/128x128/apps/org.keepassxc.KeePassXC.locked.png
+                   COMMAND inkscape -z -w 256 -h 256
+-                    icons/application/scalable/apps/keepassxc-locked.svgz -e icons/application/256x256/apps/keepassxc-locked.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.locked.svgz -e icons/application/256x256/apps/org.keepassxc.KeePassXC.locked.png
+ 
+                   # SVGZ to PNGs for KeePassXC
+                   COMMAND inkscape -z -w 16 -h 16
+-                    icons/application/scalable/apps/keepassxc-unlocked.svgz -e icons/application/16x16/apps/keepassxc-unlocked.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.unlocked.svgz -e icons/application/16x16/apps/org.keepassxc.KeePassXC.unlocked.png
+                   COMMAND inkscape -z -w  24 -h 24
+-                    icons/application/scalable/apps/keepassxc-unlocked.svgz -e icons/application/24x24/apps/keepassxc-unlocked.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.unlocked.svgz -e icons/application/24x24/apps/org.keepassxc.KeePassXC.unlocked.png
+                   COMMAND inkscape -z -w  32 -h 32
+-                    icons/application/scalable/apps/keepassxc-unlocked.svgz -e icons/application/32x32/apps/keepassxc-unlocked.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.unlocked.svgz -e icons/application/32x32/apps/org.keepassxc.KeePassXC.unlocked.png
+                   COMMAND inkscape -z -w 48 -h 48
+-                    icons/application/scalable/apps/keepassxc-unlocked.svgz -e icons/application/48x48/apps/keepassxc-unlocked.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.unlocked.svgz -e icons/application/48x48/apps/org.keepassxc.KeePassXC.unlocked.png
+                   COMMAND inkscape -z -w 64 -h 64
+-                    icons/application/scalable/apps/keepassxc-unlocked.svgz -e icons/application/64x64/apps/keepassxc-unlocked.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.unlocked.svgz -e icons/application/64x64/apps/org.keepassxc.KeePassXC.unlocked.png
+                   COMMAND inkscape -z -w 128 -h 128
+-                    icons/application/scalable/apps/keepassxc-unlocked.svgz -e icons/application/128x128/apps/keepassxc-unlocked.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.unlocked.svgz -e icons/application/128x128/apps/org.keepassxc.KeePassXC.unlocked.png
+                   COMMAND inkscape -z -w 256 -h 256
+-                    icons/application/scalable/apps/keepassxc-unlocked.svgz -e icons/application/256x256/apps/keepassxc-unlocked.png
++                    icons/application/scalable/apps/org.keepassxc.KeePassXC.unlocked.svgz -e icons/application/256x256/apps/org.keepassxc.KeePassXC.unlocked.png
+ 
+                   # SVGZ to PNGs for KeePassXC MIME-Type
+                   COMMAND inkscape -z -w 16 -h 16
+@@ -121,20 +121,20 @@ add_custom_target(icons
+ 
+                   # ICNS for MacOS
+                   COMMAND png2icns macosx/keepassxc.icns
+-                    icons/application/16x16/apps/keepassxc.png
+-                    icons/application/32x32/apps/keepassxc.png
+-                    icons/application/48x48/apps/keepassxc.png
+-                    icons/application/128x128/apps/keepassxc.png
+-                    icons/application/256x256/apps/keepassxc.png
++                    icons/application/16x16/apps/org.keepassxc.KeePassXC.png
++                    icons/application/32x32/apps/org.keepassxc.KeePassXC.png
++                    icons/application/48x48/apps/org.keepassxc.KeePassXC.png
++                    icons/application/128x128/apps/org.keepassxc.KeePassXC.png
++                    icons/application/256x256/apps/org.keepassxc.KeePassXC.png
+ 
+                   # ICO for Windows
+                   COMMAND icotool -c -o windows/keepassxc.ico
+-                    icons/application/16x16/apps/keepassxc.png
+-                    icons/application/24x24/apps/keepassxc.png
+-                    icons/application/32x32/apps/keepassxc.png
+-                    icons/application/48x48/apps/keepassxc.png
+-                    icons/application/64x64/apps/keepassxc.png
+-                    icons/application/128x128/apps/keepassxc.png
+-                    icons/application/256x256/apps/keepassxc.png
++                    icons/application/16x16/apps/org.keepassxc.KeePassXC.png
++                    icons/application/24x24/apps/org.keepassxc.KeePassXC.png
++                    icons/application/32x32/apps/org.keepassxc.KeePassXC.png
++                    icons/application/48x48/apps/org.keepassxc.KeePassXC.png
++                    icons/application/64x64/apps/org.keepassxc.KeePassXC.png
++                    icons/application/128x128/apps/org.keepassxc.KeePassXC.png
++                    icons/application/256x256/apps/org.keepassxc.KeePassXC.png
+                   VERBATIM
+                   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+diff --git a/share/icons/application/128x128/apps/keepassxc-dark.png b/share/icons/application/128x128/apps/org.keepassxc.KeePassXC.dark.png
+similarity index 100%
+rename from share/icons/application/128x128/apps/keepassxc-dark.png
+rename to share/icons/application/128x128/apps/org.keepassxc.KeePassXC.dark.png
+diff --git a/share/icons/application/128x128/apps/keepassxc-locked.png b/share/icons/application/128x128/apps/org.keepassxc.KeePassXC.locked.png
+similarity index 100%
+rename from share/icons/application/128x128/apps/keepassxc-locked.png
+rename to share/icons/application/128x128/apps/org.keepassxc.KeePassXC.locked.png
+diff --git a/share/icons/application/128x128/apps/keepassxc-unlocked.png b/share/icons/application/128x128/apps/org.keepassxc.KeePassXC.png
+similarity index 100%
+rename from share/icons/application/128x128/apps/keepassxc-unlocked.png
+rename to share/icons/application/128x128/apps/org.keepassxc.KeePassXC.png
+diff --git a/share/icons/application/128x128/apps/keepassxc.png b/share/icons/application/128x128/apps/org.keepassxc.KeePassXC.unlocked.png
+similarity index 100%
+rename from share/icons/application/128x128/apps/keepassxc.png
+rename to share/icons/application/128x128/apps/org.keepassxc.KeePassXC.unlocked.png
+diff --git a/share/icons/application/16x16/apps/keepassxc-dark.png b/share/icons/application/16x16/apps/org.keepassxc.KeePassXC.dark.png
+similarity index 100%
+rename from share/icons/application/16x16/apps/keepassxc-dark.png
+rename to share/icons/application/16x16/apps/org.keepassxc.KeePassXC.dark.png
+diff --git a/share/icons/application/16x16/apps/keepassxc-locked.png b/share/icons/application/16x16/apps/org.keepassxc.KeePassXC.locked.png
+similarity index 100%
+rename from share/icons/application/16x16/apps/keepassxc-locked.png
+rename to share/icons/application/16x16/apps/org.keepassxc.KeePassXC.locked.png
+diff --git a/share/icons/application/16x16/apps/keepassxc-unlocked.png b/share/icons/application/16x16/apps/org.keepassxc.KeePassXC.unlocked.png
+similarity index 100%
+rename from share/icons/application/16x16/apps/keepassxc-unlocked.png
+rename to share/icons/application/16x16/apps/org.keepassxc.KeePassXC.unlocked.png
+diff --git a/share/icons/application/24x24/apps/keepassxc-dark.png b/share/icons/application/24x24/apps/org.keepassxc.KeePassXC.dark.png
+similarity index 100%
+rename from share/icons/application/24x24/apps/keepassxc-dark.png
+rename to share/icons/application/24x24/apps/org.keepassxc.KeePassXC.dark.png
+diff --git a/share/icons/application/24x24/apps/keepassxc-locked.png b/share/icons/application/24x24/apps/org.keepassxc.KeePassXC.locked.png
+similarity index 100%
+rename from share/icons/application/24x24/apps/keepassxc-locked.png
+rename to share/icons/application/24x24/apps/org.keepassxc.KeePassXC.locked.png
+diff --git a/share/icons/application/24x24/apps/keepassxc-unlocked.png b/share/icons/application/24x24/apps/org.keepassxc.KeePassXC.unlocked.png
+similarity index 100%
+rename from share/icons/application/24x24/apps/keepassxc-unlocked.png
+rename to share/icons/application/24x24/apps/org.keepassxc.KeePassXC.unlocked.png
+diff --git a/share/icons/application/256x256/apps/keepassxc-dark.png b/share/icons/application/256x256/apps/org.keepassxc.KeePassXC.dark.png
+similarity index 100%
+rename from share/icons/application/256x256/apps/keepassxc-dark.png
+rename to share/icons/application/256x256/apps/org.keepassxc.KeePassXC.dark.png
+diff --git a/share/icons/application/256x256/apps/keepassxc-locked.png b/share/icons/application/256x256/apps/org.keepassxc.KeePassXC.locked.png
+similarity index 100%
+rename from share/icons/application/256x256/apps/keepassxc-locked.png
+rename to share/icons/application/256x256/apps/org.keepassxc.KeePassXC.locked.png
+diff --git a/share/icons/application/256x256/apps/keepassxc-unlocked.png b/share/icons/application/256x256/apps/org.keepassxc.KeePassXC.unlocked.png
+similarity index 100%
+rename from share/icons/application/256x256/apps/keepassxc-unlocked.png
+rename to share/icons/application/256x256/apps/org.keepassxc.KeePassXC.unlocked.png
+diff --git a/share/icons/application/32x32/apps/keepassxc-dark.png b/share/icons/application/32x32/apps/org.keepassxc.KeePassXC.dark.png
+similarity index 100%
+rename from share/icons/application/32x32/apps/keepassxc-dark.png
+rename to share/icons/application/32x32/apps/org.keepassxc.KeePassXC.dark.png
+diff --git a/share/icons/application/32x32/apps/keepassxc-locked.png b/share/icons/application/32x32/apps/org.keepassxc.KeePassXC.locked.png
+similarity index 100%
+rename from share/icons/application/32x32/apps/keepassxc-locked.png
+rename to share/icons/application/32x32/apps/org.keepassxc.KeePassXC.locked.png
+diff --git a/share/icons/application/32x32/apps/keepassxc-unlocked.png b/share/icons/application/32x32/apps/org.keepassxc.KeePassXC.unlocked.png
+similarity index 100%
+rename from share/icons/application/32x32/apps/keepassxc-unlocked.png
+rename to share/icons/application/32x32/apps/org.keepassxc.KeePassXC.unlocked.png
+diff --git a/share/icons/application/48x48/apps/keepassxc-dark.png b/share/icons/application/48x48/apps/org.keepassxc.KeePassXC.dark.png
+similarity index 100%
+rename from share/icons/application/48x48/apps/keepassxc-dark.png
+rename to share/icons/application/48x48/apps/org.keepassxc.KeePassXC.dark.png
+diff --git a/share/icons/application/48x48/apps/keepassxc-locked.png b/share/icons/application/48x48/apps/org.keepassxc.KeePassXC.locked.png
+similarity index 100%
+rename from share/icons/application/48x48/apps/keepassxc-locked.png
+rename to share/icons/application/48x48/apps/org.keepassxc.KeePassXC.locked.png
+diff --git a/share/icons/application/48x48/apps/keepassxc-unlocked.png b/share/icons/application/48x48/apps/org.keepassxc.KeePassXC.unlocked.png
+similarity index 100%
+rename from share/icons/application/48x48/apps/keepassxc-unlocked.png
+rename to share/icons/application/48x48/apps/org.keepassxc.KeePassXC.unlocked.png
+diff --git a/share/icons/application/64x64/apps/keepassxc-dark.png b/share/icons/application/64x64/apps/org.keepassxc.KeePassXC.dark.png
+similarity index 100%
+rename from share/icons/application/64x64/apps/keepassxc-dark.png
+rename to share/icons/application/64x64/apps/org.keepassxc.KeePassXC.dark.png
+diff --git a/share/icons/application/64x64/apps/keepassxc-locked.png b/share/icons/application/64x64/apps/org.keepassxc.KeePassXC.locked.png
+similarity index 100%
+rename from share/icons/application/64x64/apps/keepassxc-locked.png
+rename to share/icons/application/64x64/apps/org.keepassxc.KeePassXC.locked.png
+diff --git a/share/icons/application/64x64/apps/keepassxc-unlocked.png b/share/icons/application/64x64/apps/org.keepassxc.KeePassXC.unlocked.png
+similarity index 100%
+rename from share/icons/application/64x64/apps/keepassxc-unlocked.png
+rename to share/icons/application/64x64/apps/org.keepassxc.KeePassXC.unlocked.png
+diff --git a/share/icons/application/scalable/apps/keepassxc-dark.svgz b/share/icons/application/scalable/apps/org.keepassxc.KeePassXC.dark.svgz
+similarity index 100%
+rename from share/icons/application/scalable/apps/keepassxc-dark.svgz
+rename to share/icons/application/scalable/apps/org.keepassxc.KeePassXC.dark.svgz
+diff --git a/share/icons/application/scalable/apps/keepassxc-locked.svgz b/share/icons/application/scalable/apps/org.keepassxc.KeePassXC.locked.svgz
+similarity index 100%
+rename from share/icons/application/scalable/apps/keepassxc-locked.svgz
+rename to share/icons/application/scalable/apps/org.keepassxc.KeePassXC.locked.svgz
+diff --git a/share/icons/application/scalable/apps/keepassxc-unlocked.svgz b/share/icons/application/scalable/apps/org.keepassxc.KeePassXC.unlocked.svgz
+similarity index 100%
+rename from share/icons/application/scalable/apps/keepassxc-unlocked.svgz
+rename to share/icons/application/scalable/apps/org.keepassxc.KeePassXC.unlocked.svgz
+diff --git a/share/linux/org.keepassxc.KeePassXC.desktop b/share/linux/org.keepassxc.KeePassXC.desktop
+index 8a016980..959ded7d 100644
+--- a/share/linux/org.keepassxc.KeePassXC.desktop
++++ b/share/linux/org.keepassxc.KeePassXC.desktop
+@@ -8,7 +8,7 @@ GenericName[ru]=менеджер паролей
+ Comment=Community-driven port of the Windows application “KeePass Password Safe”
+ Exec=keepassxc %f
+ TryExec=keepassxc
+-Icon=keepassxc
++Icon=org.keepassxc.KeePassXC
+ StartupWMClass=keepassxc
+ Terminal=false
+ Type=Application
+diff --git a/src/core/FilePath.cpp b/src/core/FilePath.cpp
+index b5c9d102..9daead85 100644
+--- a/src/core/FilePath.cpp
++++ b/src/core/FilePath.cpp
+@@ -92,27 +92,27 @@ QString FilePath::pluginPath(const QString& name)
+ QIcon FilePath::applicationIcon()
+ {
+ #ifdef KEEPASSXC_DIST_SNAP
+-    return icon("apps", "keepassxc", false);
++    return icon("apps", "org.keepassxc.KeePassXC", false);
+ #else
+-    return icon("apps", "keepassxc");
++    return icon("apps", "org.keepassxc.KeePassXC");
+ #endif
+ }
+ 
+ QIcon FilePath::trayIconLocked()
+ {
+ #ifdef KEEPASSXC_DIST_SNAP
+-    return icon("apps", "keepassxc-locked", false);
++    return icon("apps", "org.keepassxc.KeePassXC", false);
+ #else
+-    return icon("apps", "keepassxc-locked");
++    return icon("apps", "org.keepassxc.KeePassXC.locked");
+ #endif
+ }
+ 
+ QIcon FilePath::trayIconUnlocked()
+ {
+ #ifdef KEEPASSXC_DIST_SNAP
+-    return icon("apps", "keepassxc-unlocked", false);
++    return icon("apps", "org.keepassxc.KeePassXC", false);
+ #else
+-    return icon("apps", "keepassxc-unlocked");
++    return icon("apps", "org.keepassxc.KeePassXC.unlocked");
+ #endif
+ }
+ 

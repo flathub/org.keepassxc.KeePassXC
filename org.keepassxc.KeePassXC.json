@@ -70,7 +70,8 @@
           "sources": [{
             "type": "git",
             "url": "https://github.com/libusb/libusb.git",
-            "branch": "v1.0.21"
+            "tag": "v1.0.21",
+            "commit": "09e75e98b4d9ea7909e8837b7a3f00dda4589dc3"
           }],
           "post-install": [
             "install -Dm644 COPYING /app/share/licenses/libusb/COPYING"
@@ -82,7 +83,8 @@
             {
               "type": "git",
               "url": "https://github.com/Yubico/yubico-c.git",
-              "branch": "libyubikey-1.13"
+              "tag": "libyubikey-1.13",
+              "commit": "0b4f3909416a5a5c4d5bbf5104682218fe3c7218"
             },
             {
               "type": "script",
@@ -112,7 +114,8 @@
             {
               "type": "git",
               "url": "https://github.com/Yubico/yubikey-personalization.git",
-              "branch": "v1.18.0"
+              "tag": "v1.18.1",
+              "commit": "2e008cfa4013ca2bc1a8eb7a112b7ee672820158"
             },
             {
               "type": "script",

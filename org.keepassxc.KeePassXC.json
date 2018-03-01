@@ -4,6 +4,7 @@
   "runtime-version": "5.9",
   "sdk": "org.kde.Sdk",
   "command": "keepassxc",
+  "rename-icon": "keepassxc",
   "finish-args": [
     /* X11 + XShm access */
     "--share=ipc", "--socket=x11",
@@ -37,21 +38,15 @@
       "buildsystem": "cmake",
       "config-opts": [
         "-DCMAKE_BUILD_TYPE=Release",
-        "-DWITH_XC_AUTOTYPE=ON",
-        "-DWITH_XC_HTTP=ON",
-        "-DWITH_XC_YUBIKEY=ON",
-        "-DKEEPASSXC_DIST_TYPE=Flatpak"
+        "-DKEEPASSXC_DIST_TYPE=Flatpak",
+        "-DKEEPASSXC_BUILD_TYPE=Release",
+        "-DWITH_XC_ALL=ON"
       ],
       "sources": [
         {
           "type": "archive",
-          "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.2.4/keepassxc-2.2.4-src.tar.xz",
-          "sha256": "e52fa32cb39af3c64ddd651481b7963b1206830687fb7d4c9f20ad5d6ac0d3dd"
-        },
-        {
-          /* id is still broken in appdata */
-          "type": "patch",
-          "path": "keepassxc-id-fix.patch"
+          "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.3.0/keepassxc-2.3.0-src.tar.xz",
+          "sha256": "ec5858daeaa05386a614b799d5daf01c634205844647e2f9d25aaf655d2adbec"
         },
         {
           "type": "patch",
@@ -65,7 +60,7 @@
       "post-install": [
         "for f in COPYING LICENSE*; do install -Dm644 $f /app/share/licenses/org.keepassxc.KeePassXC/$f; done"
       ],
-      "cleanup": [ "keepassxc-cli" ],
+      "cleanup": [ "keepassxc-cli", "/share/man" ],
       "modules": [
         {
           "name": "libusb",
@@ -127,6 +122,33 @@
             "install -Dm644 COPYING /app/share/licenses/libykpers-1/COPYING"
           ],
           "cleanup": [ "/bin", "/share/man" ]
+        },
+        {
+          "name": "libsodium",
+          "sources": [{
+            "type": "git",
+            "url": "https://github.com/jedisct1/libsodium.git",
+            "tag": "1.0.16",
+            "commit": "675149b9b8b66ff44152553fb3ebf9858128363d"
+          }],
+          "post-install": [
+            "install -Dm644 LICENSE /app/share/licenses/libsodium/LICENSE"
+          ]
+        },
+        {
+          "name": "libargon2",
+          "no-autogen": true,
+          "make-args": [ "PREFIX=/app", "OPTTARGET=none" ],
+          "make-install-args": [ "PREFIX=/app", "OPTTARGET=none" ],
+          "sources": [{
+            "type": "git",
+            "url": "https://github.com/P-H-C/phc-winner-argon2.git",
+            "tag": "20171227",
+            "commit": "670229c849b9fe882583688b74eb7dfdc846f9f6"
+          }],
+          "post-install": [
+            "install -Dm644 LICENSE /app/share/licenses/libargon2/LICENSE"
+          ]
         }
       ]
     }

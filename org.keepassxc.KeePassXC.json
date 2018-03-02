@@ -98,12 +98,20 @@
           "cleanup": [ "/bin", "/share/man" ],
           "modules": [
             {
-              "name": "a2x",
-              "sources": [{
-                "type": "archive",
-                "url": "https://downloads.sourceforge.net/project/asciidoc/asciidoc/8.6.9/asciidoc-8.6.9.tar.gz",
-                "sha256": "78db9d0567c8ab6570a6eff7ffdf84eadd91f2dfc0a92a2d0105d323cab4e1f0"
-              }],
+              "name": "asciidoc",
+              "sources": [
+                {
+                  "type": "git",
+                  "url": "https://github.com/asciidoc/asciidoc.git",
+                  "tag": "8.6.10",
+                  "commit": "37f6baaf04e2d6123a1f7318a5ec361d2ed6ca28"
+                },
+                {
+                  "type": "script",
+                  "dest-filename": "autogen.sh",
+                  "commands": [ "autoreconf --install" ]
+                }
+              ],
               "cleanup": [ "*" ]
             }
           ]

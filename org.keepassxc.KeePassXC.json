@@ -4,6 +4,7 @@
   "runtime-version": "5.9",
   "sdk": "org.kde.Sdk",
   "command": "keepassxc",
+  "rename-icon": "keepassxc",
   "finish-args": [
     /* X11 + XShm access */
     "--share=ipc", "--socket=x11",
@@ -12,8 +13,10 @@
     /* Notification access */
     "--talk-name=org.freedesktop.Notifications",
     /* Screen Lock Listener */
-    "--talk-name=org.freedesktop.login1.Manager",
     "--talk-name=org.freedesktop.ScreenSaver",
+    "--talk-name=org.freedesktop.login1.Manager",
+    "--talk-name=org.freedesktop.login1.Session",
+    "--talk-name=org.gnome.ScreenSaver",
     "--talk-name=org.gnome.SessionManager",
     "--talk-name=org.gnome.SessionManager.Presence",
     "--talk-name=com.canonical.Unity.Session",
@@ -37,21 +40,15 @@
       "buildsystem": "cmake",
       "config-opts": [
         "-DCMAKE_BUILD_TYPE=Release",
-        "-DWITH_XC_AUTOTYPE=ON",
-        "-DWITH_XC_HTTP=ON",
-        "-DWITH_XC_YUBIKEY=ON",
-        "-DKEEPASSXC_DIST_TYPE=Flatpak"
+        "-DKEEPASSXC_DIST_TYPE=Flatpak",
+        "-DKEEPASSXC_BUILD_TYPE=Release",
+        "-DWITH_XC_ALL=ON"
       ],
       "sources": [
         {
           "type": "archive",
-          "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.2.4/keepassxc-2.2.4-src.tar.xz",
-          "sha256": "e52fa32cb39af3c64ddd651481b7963b1206830687fb7d4c9f20ad5d6ac0d3dd"
-        },
-        {
-          /* id is still broken in appdata */
-          "type": "patch",
-          "path": "keepassxc-id-fix.patch"
+          "url": "https://github.com/keepassxreboot/keepassxc/releases/download/2.3.0/keepassxc-2.3.0-src.tar.xz",
+          "sha256": "ec5858daeaa05386a614b799d5daf01c634205844647e2f9d25aaf655d2adbec"
         },
         {
           "type": "patch",
@@ -65,7 +62,7 @@
       "post-install": [
         "for f in COPYING LICENSE*; do install -Dm644 $f /app/share/licenses/org.keepassxc.KeePassXC/$f; done"
       ],
-      "cleanup": [ "keepassxc-cli" ],
+      "cleanup": [ "keepassxc-cli", "/share/man" ],
       "modules": [
         {
           "name": "libusb",
@@ -73,7 +70,8 @@
           "sources": [{
             "type": "git",
             "url": "https://github.com/libusb/libusb.git",
-            "branch": "v1.0.21"
+            "tag": "v1.0.21",
+            "commit": "09e75e98b4d9ea7909e8837b7a3f00dda4589dc3"
           }],
           "post-install": [
             "install -Dm644 COPYING /app/share/licenses/libusb/COPYING"
@@ -85,7 +83,8 @@
             {
               "type": "git",
               "url": "https://github.com/Yubico/yubico-c.git",
-              "branch": "libyubikey-1.13"
+              "tag": "libyubikey-1.13",
+              "commit": "0b4f3909416a5a5c4d5bbf5104682218fe3c7218"
             },
             {
               "type": "script",
@@ -99,12 +98,20 @@
           "cleanup": [ "/bin", "/share/man" ],
           "modules": [
             {
-              "name": "a2x",
-              "sources": [{
-                "type": "archive",
-                "url": "https://downloads.sourceforge.net/project/asciidoc/asciidoc/8.6.9/asciidoc-8.6.9.tar.gz",
-                "sha256": "78db9d0567c8ab6570a6eff7ffdf84eadd91f2dfc0a92a2d0105d323cab4e1f0"
-              }],
+              "name": "asciidoc",
+              "sources": [
+                {
+                  "type": "git",
+                  "url": "https://github.com/asciidoc/asciidoc.git",
+                  "tag": "8.6.10",
+                  "commit": "37f6baaf04e2d6123a1f7318a5ec361d2ed6ca28"
+                },
+                {
+                  "type": "script",
+                  "dest-filename": "autogen.sh",
+                  "commands": [ "autoreconf --install" ]
+                }
+              ],
               "cleanup": [ "*" ]
             }
           ]
@@ -115,7 +122,8 @@
             {
               "type": "git",
               "url": "https://github.com/Yubico/yubikey-personalization.git",
-              "branch": "v1.18.0"
+              "tag": "v1.18.1",
+              "commit": "2e008cfa4013ca2bc1a8eb7a112b7ee672820158"
             },
             {
               "type": "script",
@@ -127,6 +135,33 @@
             "install -Dm644 COPYING /app/share/licenses/libykpers-1/COPYING"
           ],
           "cleanup": [ "/bin", "/share/man" ]
+        },
+        {
+          "name": "libsodium",
+          "sources": [{
+            "type": "git",
+            "url": "https://github.com/jedisct1/libsodium.git",
+            "tag": "1.0.16",
+            "commit": "675149b9b8b66ff44152553fb3ebf9858128363d"
+          }],
+          "post-install": [
+            "install -Dm644 LICENSE /app/share/licenses/libsodium/LICENSE"
+          ]
+        },
+        {
+          "name": "libargon2",
+          "no-autogen": true,
+          "make-args": [ "PREFIX=/app", "OPTTARGET=none" ],
+          "make-install-args": [ "PREFIX=/app", "OPTTARGET=none" ],
+          "sources": [{
+            "type": "git",
+            "url": "https://github.com/P-H-C/phc-winner-argon2.git",
+            "tag": "20171227",
+            "commit": "670229c849b9fe882583688b74eb7dfdc846f9f6"
+          }],
+          "post-install": [
+            "install -Dm644 LICENSE /app/share/licenses/libargon2/LICENSE"
+          ]
         }
       ]
     }

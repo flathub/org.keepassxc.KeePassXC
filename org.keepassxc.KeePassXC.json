@@ -1,7 +1,7 @@
 {
   "id": "org.keepassxc.KeePassXC",
   "runtime": "org.kde.Platform",
-  "runtime-version": "5.9",
+  "runtime-version": "5.10",
   "sdk": "org.kde.Sdk",
   "command": "keepassxc",
   "rename-icon": "keepassxc",

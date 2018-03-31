@@ -52,11 +52,11 @@
         },
         {
           "type": "patch",
-          "path": "keepassxc-icons-id.patch"
+          "path": "patch/keepassxc/0001-Rename-indicator-icons-to-match-id.patch"
         },
         {
           "type": "patch",
-          "path": "keepassxc-flatpak-dist-type.patch"
+          "path": "patch/keepassxc/0002-Add-flatpak-distribution-type.patch"
         }
       ],
       "post-install": [

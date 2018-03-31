@@ -70,8 +70,8 @@
           "sources": [{
             "type": "git",
             "url": "https://github.com/libusb/libusb.git",
-            "tag": "v1.0.21",
-            "commit": "09e75e98b4d9ea7909e8837b7a3f00dda4589dc3"
+            "tag": "v1.0.22",
+            "commit": "0034b2afdcdb1614e78edaa2a9e22d5936aeae5d"
           }],
           "post-install": [
             "install -Dm644 COPYING /app/share/licenses/libusb/COPYING"

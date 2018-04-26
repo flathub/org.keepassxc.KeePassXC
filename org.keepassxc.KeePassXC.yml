@@ -108,8 +108,8 @@ modules:
         sources:
           - type: git
             url: 'https://github.com/Yubico/yubikey-personalization.git'
-            tag: v1.18.1
-            commit: 2e008cfa4013ca2bc1a8eb7a112b7ee672820158
+            tag: v1.19.0
+            commit: a2dfc57b2dea24453af0209e2242ac36a1722976
           - type: script
             dest-filename: autogen.sh
             commands:

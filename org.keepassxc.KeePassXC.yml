@@ -26,6 +26,8 @@ finish-args:
   - --share=network
     # YubiKey USB access
   - --device=all
+    # Access to temporary files (should use xdg-run)
+  - --filesystem=/tmp
 build-options:
   cflags: -O2 -g
   env: { V: '1' }

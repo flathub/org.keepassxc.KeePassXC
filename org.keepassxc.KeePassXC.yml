@@ -59,7 +59,6 @@ modules:
           install -Dm644 $f /app/share/licenses/org.keepassxc.KeePassXC/$f
         done
     cleanup:
-      - /bin/keepassxc-cli
       - /share/man
     modules:
 

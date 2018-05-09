@@ -1,4 +1,4 @@
-From a5d90cd89875ddbe520f791d7b6e45cb22ec9f31 Mon Sep 17 00:00:00 2001
+From e09df33a36e800f0730aa057dbd8be9d1db7fe2d Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Thu, 15 Feb 2018 19:10:08 +0100
 Subject: [PATCH 1/2] Rename indicator icons to match id
@@ -8,33 +8,33 @@ filename with the application id.
 
 This is required in order for indicator/tray icons to work with flatpak.
 ---
- COPYING                                            |  12 +++---
- share/CMakeLists.txt                               |  42 ++++++++++-----------
- ...d.png => org.keeepassxc.KeePassXC.unlocked.png} | Bin
- ...c-dark.png => org.keepassxc.KeePassXC.dark.png} | Bin
- ...cked.png => org.keepassxc.KeePassXC.locked.png} | Bin
- ...c-dark.png => org.keepassxc.KeePassXC.dark.png} | Bin
- ...cked.png => org.keepassxc.KeePassXC.locked.png} | Bin
- ...ed.png => org.keepassxc.KeePassXC.unlocked.png} | Bin
- ...c-dark.png => org.keepassxc.KeePassXC.dark.png} | Bin
- ...cked.png => org.keepassxc.KeePassXC.locked.png} | Bin
- ...ed.png => org.keepassxc.KeePassXC.unlocked.png} | Bin
- ...c-dark.png => org.keepassxc.KeePassXC.dark.png} | Bin
- ...cked.png => org.keepassxc.KeePassXC.locked.png} | Bin
- ...ed.png => org.keepassxc.KeePassXC.unlocked.png} | Bin
- ...c-dark.png => org.keepassxc.KeePassXC.dark.png} | Bin
- ...cked.png => org.keepassxc.KeePassXC.locked.png} | Bin
- ...ed.png => org.keepassxc.KeePassXC.unlocked.png} | Bin
- ...c-dark.png => org.keepassxc.KeePassXC.dark.png} | Bin
- ...cked.png => org.keepassxc.KeePassXC.locked.png} | Bin
- ...ed.png => org.keepassxc.KeePassXC.unlocked.png} | Bin
- ...c-dark.png => org.keepassxc.KeePassXC.dark.png} | Bin
- ...cked.png => org.keepassxc.KeePassXC.locked.png} | Bin
- ...ed.png => org.keepassxc.KeePassXC.unlocked.png} | Bin
- ...dark.svgz => org.keepassxc.KeePassXC.dark.svgz} | Bin
- ...ed.svgz => org.keepassxc.KeePassXC.locked.svgz} | Bin
- ....svgz => org.keepassxc.KeePassXC.unlocked.svgz} | Bin
- src/core/FilePath.cpp                              |  12 +++---
+ COPYING                                       |  12 ++---
+ share/CMakeLists.txt                          |  42 +++++++++---------
+ ... => org.keeepassxc.KeePassXC.unlocked.png} | Bin
+ ...k.png => org.keepassxc.KeePassXC.dark.png} | Bin
+ ...png => org.keepassxc.KeePassXC.locked.png} | Bin
+ ...k.png => org.keepassxc.KeePassXC.dark.png} | Bin
+ ...png => org.keepassxc.KeePassXC.locked.png} | Bin
+ ...g => org.keepassxc.KeePassXC.unlocked.png} | Bin
+ ...k.png => org.keepassxc.KeePassXC.dark.png} | Bin
+ ...png => org.keepassxc.KeePassXC.locked.png} | Bin
+ ...g => org.keepassxc.KeePassXC.unlocked.png} | Bin
+ ...k.png => org.keepassxc.KeePassXC.dark.png} | Bin
+ ...png => org.keepassxc.KeePassXC.locked.png} | Bin
+ ...g => org.keepassxc.KeePassXC.unlocked.png} | Bin
+ ...k.png => org.keepassxc.KeePassXC.dark.png} | Bin
+ ...png => org.keepassxc.KeePassXC.locked.png} | Bin
+ ...g => org.keepassxc.KeePassXC.unlocked.png} | Bin
+ ...k.png => org.keepassxc.KeePassXC.dark.png} | Bin
+ ...png => org.keepassxc.KeePassXC.locked.png} | Bin
+ ...g => org.keepassxc.KeePassXC.unlocked.png} | Bin
+ ...k.png => org.keepassxc.KeePassXC.dark.png} | Bin
+ ...png => org.keepassxc.KeePassXC.locked.png} | Bin
+ ...g => org.keepassxc.KeePassXC.unlocked.png} | Bin
+ ...svgz => org.keepassxc.KeePassXC.dark.svgz} | Bin
+ ...gz => org.keepassxc.KeePassXC.locked.svgz} | Bin
+ ... => org.keepassxc.KeePassXC.unlocked.svgz} | Bin
+ src/core/FilePath.cpp                         |  12 ++---
  27 files changed, 33 insertions(+), 33 deletions(-)
  rename share/icons/application/128x128/apps/{keepassxc-unlocked.png => org.keeepassxc.KeePassXC.unlocked.png} (100%)
  rename share/icons/application/128x128/apps/{keepassxc-dark.png => org.keepassxc.KeePassXC.dark.png} (100%)
@@ -258,10 +258,10 @@ similarity index 100%
 rename from share/icons/application/scalable/apps/keepassxc-unlocked.svgz
 rename to share/icons/application/scalable/apps/org.keepassxc.KeePassXC.unlocked.svgz
 diff --git a/src/core/FilePath.cpp b/src/core/FilePath.cpp
-index 330542eb..0a959de2 100644
+index c6f1907a..d7f8a812 100644
 --- a/src/core/FilePath.cpp
 +++ b/src/core/FilePath.cpp
-@@ -101,9 +101,9 @@ QIcon FilePath::applicationIcon()
+@@ -110,18 +110,18 @@ QIcon FilePath::trayIcon()
      bool darkIcon = useDarkIcon();
  
  #ifdef KEEPASSXC_DIST_SNAP
@@ -273,7 +273,6 @@ index 330542eb..0a959de2 100644
  #endif
  }
  
-@@ -111,9 +111,9 @@ QIcon FilePath::applicationIcon()
  QIcon FilePath::trayIconLocked()
  {
  #ifdef KEEPASSXC_DIST_SNAP
@@ -285,7 +284,7 @@ index 330542eb..0a959de2 100644
  #endif
  }
  
-@@ -122,9 +122,9 @@ QIcon FilePath::trayIconUnlocked()
+@@ -130,9 +130,9 @@ QIcon FilePath::trayIconUnlocked()
      bool darkIcon = useDarkIcon();
  
  #ifdef KEEPASSXC_DIST_SNAP
@@ -298,5 +297,5 @@ index 330542eb..0a959de2 100644
  }
  
 -- 
-2.16.3
+2.17.0
 

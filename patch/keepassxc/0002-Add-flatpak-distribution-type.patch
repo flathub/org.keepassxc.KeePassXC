@@ -1,4 +1,4 @@
-From aef465122de5ccae01e808f64a8151dc3e86abc6 Mon Sep 17 00:00:00 2001
+From 29531e23568baefa853ca168d13b744e8adc3950 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Thu, 1 Mar 2018 10:33:22 +0100
 Subject: [PATCH 2/2] Add flatpak distribution type
@@ -13,7 +13,7 @@ type is shown on the "Debug Info" page in the application.
  2 files changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4c8929ae..595c09e0 100644
+index 2e545d1a..1c6da15c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -116,11 +116,13 @@ message(STATUS "Setting up build for KeePassXC v${KEEPASSXC_VERSION}\n")
@@ -44,5 +44,5 @@ index 9f3952b0..e48f683b 100644
  #cmakedefine HAVE_PR_SET_DUMPABLE 1
  #cmakedefine HAVE_RLIMIT_CORE 1
 -- 
-2.16.3
+2.17.0
 

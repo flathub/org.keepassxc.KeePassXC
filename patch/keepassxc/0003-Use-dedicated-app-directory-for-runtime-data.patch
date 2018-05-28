@@ -1,0 +1,40 @@
+From 3758f615165b044113f4a15772071c6ff2d7fd33 Mon Sep 17 00:00:00 2001
+From: AsavarTzeth <asavartzeth@gmail.com>
+Date: Mon, 28 May 2018 20:47:31 +0200
+Subject: [PATCH 3/3] Use dedicated app directory for runtime data
+
+There are issues with using XDG_RUNTIME_DIR directly. It has the
+potential of file name conflicts and it is harder to make specific
+sandbox exemptions, without including everything else in the same
+directory.
+
+Traditionally an application specific directory, in this case named
+"keepassxc" might have been used. This would make it possible to grant
+host access with `--filesystem=xdg-run/keepassxc`, see the man page
+flatpak-run (1).
+
+A better solution is to use `XDG_RUNTIME_DIR/app/APPID` where APPID
+in this case is "org.keepassxc.KeePassXC". This space is shared by the
+host and flatpak sandbox by default and the use of the reverse dns id
+helps prevent file conflicts.
+---
+ src/browser/NativeMessagingBase.cpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/browser/NativeMessagingBase.cpp b/src/browser/NativeMessagingBase.cpp
+index 743953e9..516f6e96 100644
+--- a/src/browser/NativeMessagingBase.cpp
++++ b/src/browser/NativeMessagingBase.cpp
+@@ -133,7 +133,8 @@ QString NativeMessagingBase::getLocalServerPath() const
+     return QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/kpxc_server";
+ #elif defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
+     // Use XDG_RUNTIME_DIR instead of /tmp/ if it's available
+-    QString path = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation) + "/kpxc_server";
++    // TODO should ensure XDG_RUNTIME_DIR/app/APPID exists (in case Flatpak is not used)
++    QString path = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation) + "/app/org.keepassxc.KeePassXC/kpxc_server";
+     return path.isEmpty() ? "/tmp/kpxc_server" : path;
+ #else   // Q_OS_MAC and others
+     return "/tmp/kpxc_server";
+-- 
+2.17.0
+

@@ -2,7 +2,7 @@ id: org.keepassxc.KeePassXC
 runtime: org.kde.Platform
 runtime-version: 5.10
 sdk: org.kde.Sdk
-command: keepassxc
+command: command-wrapper.sh
 rename-icon: keepassxc
 finish-args:
     # X11 + XShm access
@@ -26,8 +26,13 @@ finish-args:
   - --share=network
     # YubiKey USB access
   - --device=all
-    # Access to temporary files (should use xdg-run)
+    # Access to temporary files (should use xdg-run, similar to patch 0003)
   - --filesystem=/tmp
+    # KeePassXC-Browser (NativeMessagingHosts subdir does not exist by default)
+  - --filesystem=xdg-config/google-chrome
+  - --filesystem=xdg-config/chromium
+  - --filesystem=~/.mozilla
+  - --filesystem=xdg-config/vivaldi
 build-options:
   cflags: -O2 -g
   env: { V: '1' }
@@ -49,17 +54,25 @@ modules:
       - type: archive
         url: 'https://github.com/keepassxreboot/keepassxc/releases/download/2.3.3/keepassxc-2.3.3-src.tar.xz'
         sha256: cfff85ef89ba590aec798c59bea4aa3db00626d7bff8cdde0f62ee34aea60ad5
+      - type: file
+        path: command-wrapper.sh
       - type: patch
         path: patch/keepassxc/0001-Rename-indicator-icons-to-match-id.patch
       - type: patch
         path: patch/keepassxc/0002-Add-flatpak-distribution-type.patch
+      - type: patch
+        path: patch/keepassxc/0003-Use-dedicated-app-directory-for-runtime-data.patch
+      - type: patch
+        path: patch/keepassxc/0004-Fix-KeePassXC-Browser-interaction-with-Flatpak.patch
     post-install:
+      - install -Dm755 -t /app/bin command-wrapper.sh
       - |
         for f in COPYING LICENSE*; do
           install -Dm644 $f /app/share/licenses/org.keepassxc.KeePassXC/$f
         done
     cleanup:
       - /share/man
+
     modules:
 
       - name: libusb

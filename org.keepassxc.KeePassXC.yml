@@ -1,6 +1,6 @@
 id: org.keepassxc.KeePassXC
 runtime: org.kde.Platform
-runtime-version: 5.10
+runtime-version: 5.11
 sdk: org.kde.Sdk
 command: command-wrapper.sh
 rename-icon: keepassxc

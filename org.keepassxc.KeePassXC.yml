@@ -28,11 +28,11 @@ finish-args:
   - --device=all
     # Access to temporary files (should use xdg-run, similar to patch 0003)
   - --filesystem=/tmp
-    # KeePassXC-Browser (NativeMessagingHosts subdir does not exist by default)
-  - --filesystem=xdg-config/google-chrome
-  - --filesystem=xdg-config/chromium
-  - --filesystem=~/.mozilla
-  - --filesystem=xdg-config/vivaldi
+    # KeePassXC-Browser Extension
+  - --filesystem=xdg-config/google-chrome/NativeMessagingHosts:create
+  - --filesystem=xdg-config/chromium/NativeMessagingHosts:create
+  - --filesystem=~/.mozilla/native-messaging-hosts:create
+  - --filesystem=xdg-config/vivaldi/NativeMessagingHosts:create
     # SSH Agent access
   - --socket=ssh-auth
 build-options:

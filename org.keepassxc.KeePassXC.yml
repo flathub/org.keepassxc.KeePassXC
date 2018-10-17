@@ -49,6 +49,7 @@ modules:
       - -DKEEPASSXC_DIST_TYPE=Flatpak
       - -DKEEPASSXC_BUILD_TYPE=Release
       - -DWITH_XC_ALL=ON
+      - -DCMAKE_INSTALL_LIBDIR=lib
     sources:
       - type: archive
         url: 'https://github.com/keepassxreboot/keepassxc/releases/download/2.3.4/keepassxc-2.3.4-src.tar.xz'

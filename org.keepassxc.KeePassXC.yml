@@ -1,6 +1,6 @@
 id: org.keepassxc.KeePassXC
 runtime: org.kde.Platform
-runtime-version: 5.9
+runtime-version: 5.12
 sdk: org.kde.Sdk
 command: command-wrapper.sh
 rename-icon: keepassxc
@@ -36,7 +36,6 @@ finish-args:
     # SSH Agent access
   - --socket=ssh-auth
 build-options:
-  cflags: -O2 -g
   env: { V: '1' }
 cleanup:
   - '*.a'

@@ -1,7 +1,7 @@
-From 3758f615165b044113f4a15772071c6ff2d7fd33 Mon Sep 17 00:00:00 2001
+From 2596b6ab6bc8b4c126d1d06e098352027562d237 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Mon, 28 May 2018 20:47:31 +0200
-Subject: [PATCH 3/3] Use dedicated app directory for runtime data
+Subject: [PATCH 3/5] Use dedicated app directory for runtime data
 
 There are issues with using XDG_RUNTIME_DIR directly. It has the
 potential of file name conflicts and it is harder to make specific
@@ -22,10 +22,10 @@ helps prevent file conflicts.
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/src/browser/NativeMessagingBase.cpp b/src/browser/NativeMessagingBase.cpp
-index 743953e9..516f6e96 100644
+index e696af90..ded44a43 100644
 --- a/src/browser/NativeMessagingBase.cpp
 +++ b/src/browser/NativeMessagingBase.cpp
-@@ -133,7 +133,8 @@ QString NativeMessagingBase::getLocalServerPath() const
+@@ -137,7 +137,8 @@ QString NativeMessagingBase::getLocalServerPath() const
      return QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/kpxc_server";
  #elif defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
      // Use XDG_RUNTIME_DIR instead of /tmp/ if it's available
@@ -36,5 +36,5 @@ index 743953e9..516f6e96 100644
  #else   // Q_OS_MAC and others
      return "/tmp/kpxc_server";
 -- 
-2.17.0
+2.20.1
 

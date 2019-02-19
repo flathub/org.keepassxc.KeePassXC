@@ -64,6 +64,8 @@ modules:
         path: patch/keepassxc/0003-Use-dedicated-app-directory-for-runtime-data.patch
       - type: patch
         path: patch/keepassxc/0004-Fix-KeePassXC-Browser-interaction-with-Flatpak.patch
+      - type: patch
+        path: patch/keepassxc/0005-Use-app-id-for-mime-types.patch
     post-install:
       - install -Dm755 -t /app/bin command-wrapper.sh
       - |

@@ -1,7 +1,7 @@
-From ebba8e616b82918c817a9edee35433cb9cf009a5 Mon Sep 17 00:00:00 2001
+From aba1215ff15de3895ca1f91e7af1e009a74795c2 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Mon, 28 May 2018 21:29:15 +0200
-Subject: [PATCH 4/4] Fix KeePassXC-Browser interaction with Flatpak
+Subject: [PATCH 4/5] Fix KeePassXC-Browser interaction with Flatpak
 
 By default KeePassXC will use the `keepassxc-proxy` program as a proxy
 between `keepassxc` and a browser. The problem is that KeePassXC
@@ -44,5 +44,5 @@ index 9b27ab1c..66e911f9 100644
      if (proxy) {
          if (!location.isEmpty()) {
 -- 
-2.17.1
+2.20.1
 

@@ -1,7 +1,7 @@
-From e09df33a36e800f0730aa057dbd8be9d1db7fe2d Mon Sep 17 00:00:00 2001
+From 8096444ac86e1ab06740d7f4d72e1e35eb963bb0 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Thu, 15 Feb 2018 19:10:08 +0100
-Subject: [PATCH 1/2] Rename indicator icons to match id
+Subject: [PATCH 1/5] Rename indicator icons to match id
 
 Ensure the uniqueness of the indicator icons, by prefixing the
 filename with the application id.
@@ -297,5 +297,5 @@ index c6f1907a..d7f8a812 100644
  }
  
 -- 
-2.17.0
+2.20.1
 

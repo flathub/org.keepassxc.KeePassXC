@@ -1,0 +1,175 @@
+From 9ff2589ee7ebc27435da93b4130f662f427bfa8f Mon Sep 17 00:00:00 2001
+From: AsavarTzeth <asavartzeth@gmail.com>
+Date: Mon, 18 Mar 2019 19:17:41 +0100
+Subject: [PATCH 2/3] Use reverse-dns for flatpak exportable files
+
+Includes application icons, tray icons and mime icons. It also
+includes the mime type xml file.
+
+Ensures that all icons and MIME types are made available to the rest of
+the system. Otherwise it would only be available inside the sandbox.
+---
+ share/CMakeLists.txt                          | 48 +++++++++++++++----
+ share/linux/.gitignore                        |  3 ++
+ .../linux/{keepassxc.xml => keepassxc.xml.in} |  2 +-
+ ...top => org.keepassxc.KeePassXC.desktop.in} |  2 +-
+ src/core/FilePath.cpp                         | 16 +++++--
+ 5 files changed, 56 insertions(+), 15 deletions(-)
+ create mode 100644 share/linux/.gitignore
+ rename share/linux/{keepassxc.xml => keepassxc.xml.in} (85%)
+ rename share/linux/{org.keepassxc.KeePassXC.desktop => org.keepassxc.KeePassXC.desktop.in} (96%)
+
+diff --git a/share/CMakeLists.txt b/share/CMakeLists.txt
+index 214c0ec9..f70efd4d 100644
+--- a/share/CMakeLists.txt
++++ b/share/CMakeLists.txt
+@@ -24,15 +24,45 @@ file(GLOB DATABASE_ICONS icons/database/*.png)
+ install(FILES ${DATABASE_ICONS} DESTINATION ${DATA_INSTALL_DIR}/icons/database)
+ 
+ if(UNIX AND NOT APPLE)
+-    install(DIRECTORY icons/application/ DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor
+-            FILES_MATCHING PATTERN "keepassx*.png" PATTERN "keepassx*.svg"
+-            PATTERN "status" EXCLUDE PATTERN "actions" EXCLUDE PATTERN "categories" EXCLUDE)
+-    install(DIRECTORY icons/application/ DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor
+-            FILES_MATCHING PATTERN "application-x-keepassxc.png" PATTERN "application-x-keepassxc.svg"
+-            PATTERN "status" EXCLUDE PATTERN "actions" EXCLUDE PATTERN "categories" EXCLUDE)
+-    install(FILES linux/org.keepassxc.KeePassXC.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
+-    install(FILES linux/org.keepassxc.KeePassXC.appdata.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo)
+-    install(FILES linux/keepassxc.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/mime/packages)
++    # Flatpak requires all files made available to the host to use the reverse-dns style id
++    if(KEEPASSXC_DIST_FLATPAK)
++        set(APP_ICON "${ID}")
++        set(MIME_ICON "${ID}")
++        configure_file(linux/keepassxc.xml.in linux/${ID}.xml @ONLY)
++        install(FILES linux/${ID}.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/mime/packages)
++
++        file(GLOB_RECURSE ICON_FILES LIST_DIRECTORIES false 
++             "icons/application/*/keepassxc*.png"
++             "icons/application/*/keepassxc*.svg"
++             "icons/application/*/application-x-keepassxc.png"
++             "icons/application/*/application-x-keepassxc.svg")
++        foreach(icon_src ${ICON_FILES})
++            get_filename_component(icon_name ${icon_src} NAME)
++            get_filename_component(dir_src ${icon_src} DIRECTORY)
++            # Rename icons to match id. Install files like "keepassxc-dark" to "org.keepassxc.KeePassXC.dark"
++            string(REPLACE "-" "." icon_name ${icon_name})
++            string(REGEX REPLACE "^.*keepassxc(.*)?(\\.png|\\.svg)$"
++                                 "${ID}\\1\\2" icon_dest_name ${icon_name})
++            file(RELATIVE_PATH icon_dir ${CMAKE_CURRENT_SOURCE_DIR}/icons/application ${dir_src})
++            install(FILES ${icon_src} DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/${icon_dir}
++                    RENAME ${icon_dest_name})
++        endforeach()
++    else()
++        set(APP_ICON "keepassxc")
++        set(MIME_ICON "application-x-keepassxc")
++        configure_file(linux/keepassxc.xml.in keepassxc.xml @ONLY)
++        install(FILES linux/keepassxc.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/mime/packages)
++
++        install(DIRECTORY icons/application/ DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor
++                FILES_MATCHING PATTERN "keepassx*.png" PATTERN "keepassx*.svg"
++                PATTERN "status" EXCLUDE PATTERN "actions" EXCLUDE PATTERN "categories" EXCLUDE)
++        install(DIRECTORY icons/application/ DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor
++                FILES_MATCHING PATTERN "application-x-keepassxc.png" PATTERN "application-x-keepassxc.svg"
++                PATTERN "status" EXCLUDE PATTERN "actions" EXCLUDE PATTERN "categories" EXCLUDE)
++    endif(KEEPASSXC_DIST_FLATPAK)
++    configure_file(linux/${ID}.desktop.in linux/${ID}.desktop @ONLY)
++    install(FILES linux/${ID}.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
++    install(FILES linux/${ID}.appdata.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo)
+ endif(UNIX AND NOT APPLE)
+ 
+ if(APPLE)
+diff --git a/share/linux/.gitignore b/share/linux/.gitignore
+new file mode 100644
+index 00000000..83528a14
+--- /dev/null
++++ b/share/linux/.gitignore
+@@ -0,0 +1,3 @@
++keepassxc.xml
++org.keepassxc.KeePassXC.xml
++org.keepassxc.KeePassXC.desktop
+diff --git a/share/linux/keepassxc.xml b/share/linux/keepassxc.xml.in
+similarity index 85%
+rename from share/linux/keepassxc.xml
+rename to share/linux/keepassxc.xml.in
+index b26b4db2..15ec1118 100644
+--- a/share/linux/keepassxc.xml
++++ b/share/linux/keepassxc.xml.in
+@@ -3,6 +3,6 @@
+   <mime-type type="application/x-keepass2">
+     <comment>KeePass 2 Database</comment>
+     <glob pattern="*.kdbx"/>
+-    <icon name="application-x-keepassxc"/>
++    <icon name="@MIME_ICON@"/>
+   </mime-type>
+ </mime-info>
+diff --git a/share/linux/org.keepassxc.KeePassXC.desktop b/share/linux/org.keepassxc.KeePassXC.desktop.in
+similarity index 96%
+rename from share/linux/org.keepassxc.KeePassXC.desktop
+rename to share/linux/org.keepassxc.KeePassXC.desktop.in
+index 6ee0f741..6b0c6da6 100644
+--- a/share/linux/org.keepassxc.KeePassXC.desktop
++++ b/share/linux/org.keepassxc.KeePassXC.desktop.in
+@@ -8,7 +8,7 @@ GenericName[ru]=менеджер паролей
+ Comment=Community-driven port of the Windows application “KeePass Password Safe”
+ Exec=keepassxc %f
+ TryExec=keepassxc
+-Icon=keepassxc
++Icon=@APP_ICON@
+ StartupWMClass=keepassxc
+ StartupNotify=true
+ Terminal=false
+diff --git a/src/core/FilePath.cpp b/src/core/FilePath.cpp
+index 5b032270..bbad6f80 100644
+--- a/src/core/FilePath.cpp
++++ b/src/core/FilePath.cpp
+@@ -95,8 +95,10 @@ QString FilePath::wordlistPath(const QString& name)
+ 
+ QIcon FilePath::applicationIcon()
+ {
+-#ifdef KEEPASSXC_DIST_SNAP
++#if defined(KEEPASSXC_DIST_SNAP)
+     return icon("apps", "keepassxc", false);
++#elif defined(KEEPASSXC_DIST_FLATPAK)
++    return icon("apps", "org.keepassxc.KeePassXC");
+ #else
+     return icon("apps", "keepassxc");
+ #endif
+@@ -106,8 +108,10 @@ QIcon FilePath::trayIcon()
+ {
+     bool darkIcon = useDarkIcon();
+ 
+-#ifdef KEEPASSXC_DIST_SNAP
++#if defined(KEEPASSXC_DIST_SNAP)
+     return (darkIcon) ? icon("apps", "keepassxc-dark", false) : icon("apps", "keepassxc", false);
++#elif defined(KEEPASSXC_DIST_FLATPAK)
++    return (darkIcon) ? icon("apps", "org.keepassxc.KeePassXC.dark") : icon("apps", "keepassxc");
+ #else
+     return (darkIcon) ? icon("apps", "keepassxc-dark") : icon("apps", "keepassxc");
+ #endif
+@@ -115,8 +119,10 @@ QIcon FilePath::trayIcon()
+ 
+ QIcon FilePath::trayIconLocked()
+ {
+-#ifdef KEEPASSXC_DIST_SNAP
++#if defined(KEEPASSXC_DIST_SNAP)
+     return icon("apps", "keepassxc-locked", false);
++#elif defined(KEEPASSXC_DIST_FLATPAK)
++    return icon("apps", "org.keepassxc.KeePassXC.locked");
+ #else
+     return icon("apps", "keepassxc-locked");
+ #endif
+@@ -126,8 +132,10 @@ QIcon FilePath::trayIconUnlocked()
+ {
+     bool darkIcon = useDarkIcon();
+ 
+-#ifdef KEEPASSXC_DIST_SNAP
++#if defined(KEEPASSXC_DIST_SNAP)
+     return darkIcon ? icon("apps", "keepassxc-dark", false) : icon("apps", "keepassxc-unlocked", false);
++#elif defined(KEEPASSXC_DIST_FLATPAK)
++    return darkIcon ? icon("apps", "org.keepassxc.KeePassXC.dark") : icon("apps", "org.keepassxc.KeePassXC.unlocked");
+ #else
+     return darkIcon ? icon("apps", "keepassxc-dark") : icon("apps", "keepassxc-unlocked");
+ #endif
+-- 
+2.21.0
+

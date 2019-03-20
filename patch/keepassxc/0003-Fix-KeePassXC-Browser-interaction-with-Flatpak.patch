@@ -1,0 +1,68 @@
+From be24fe2107735d439ffe65e39c25e7c953efe99e Mon Sep 17 00:00:00 2001
+From: AsavarTzeth <asavartzeth@gmail.com>
+Date: Mon, 28 May 2018 21:29:15 +0200
+Subject: [PATCH 3/3] Fix KeePassXC-Browser interaction with Flatpak
+
+By default, `keepassxc-proxy` will act as a proxy between `keepassxc`
+and a browser. The browser communicates using the Native Messaging Host
+API, over stdio.
+
+There are a great many issues with this approach. Most noteworthy:
+1. The browser needs to execute `keepassxc-proxy` and pass arguments to
+   it, which it cannot due to sandboxing.
+2. This must be an absolute path, which excludes
+   `flatpak run --command=keepassxc-proxy`.
+3. This can be worked around with wrappers provided by Flatpak:
+   "/var/lib/flatpak/exports/bin/org.keepassxc.KeePassXC"
+   But if any other installation path is used the user must configure
+   this manually.
+4. This alone is not enough, since that would just execute `keepassxc`.
+   It can be worked around with a wrapper script that matches and
+   redirects arguments to `keepassxc-proxy`. Feels like a hack though.
+5. All of this is moot if the browser too is sandboxed, in which case
+   it cannot execute any other app.
+
+This fix makes almost everything work out of the box, assuming that the
+browser is not sandboxed and org.keepassxc.KeePassXC is installed in the
+default system-wide installation.
+
+Hopefully in the future the Native Messaging Host API will support D-Bus.
+---
+ src/browser/HostInstaller.cpp       | 6 ++++++
+ src/browser/NativeMessagingBase.cpp | 3 +++
+ 2 files changed, 9 insertions(+)
+
+diff --git a/src/browser/HostInstaller.cpp b/src/browser/HostInstaller.cpp
+index 08782fa1..9e0376b8 100644
+--- a/src/browser/HostInstaller.cpp
++++ b/src/browser/HostInstaller.cpp
+@@ -255,6 +255,12 @@ QString HostInstaller::getProxyPath(const bool& proxy, const QString& location)
+     } else {
+         path = QProcessEnvironment::systemEnvironment().value("APPIMAGE");
+     }
++#elif defined KEEPASSXC_DIST_FLATPAK
++    if (proxy && !location.isEmpty()) {
++        path = location;
++    } else {
++        path = "/var/lib/flatpak/exports/bin/org.keepassxc.KeePassXC";
++    }
+ #else
+     if (proxy) {
+         if (!location.isEmpty()) {
+diff --git a/src/browser/NativeMessagingBase.cpp b/src/browser/NativeMessagingBase.cpp
+index a6b8d97c..016d6333 100644
+--- a/src/browser/NativeMessagingBase.cpp
++++ b/src/browser/NativeMessagingBase.cpp
+@@ -139,6 +139,9 @@ QString NativeMessagingBase::getLocalServerPath() const
+     const QString serverPath = "/kpxc_server";
+ #if defined(KEEPASSXC_DIST_SNAP)
+     return QProcessEnvironment::systemEnvironment().value("SNAP_COMMON") + serverPath;
++#elif defined(KEEPASSXC_DIST_FLATPAK)
++    return QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation) +
++           "/app/org.keepassxc.KeePassXC" + serverPath;
+ #elif defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+     // Use XDG_RUNTIME_DIR instead of /tmp if it's available
+     QString path = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
+-- 
+2.21.0
+

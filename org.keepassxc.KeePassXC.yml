@@ -157,12 +157,18 @@ modules:
             commit: 670229c849b9fe882583688b74eb7dfdc846f9f6
         post-install:
           - install -Dm644 -t /app/share/licenses/libargon2 LICENSE
+        cleanup:
+          - /bin
 
       - name: libqrencode
         sources:
           - type: archive
             url: 'https://fukuchi.org/works/qrencode/qrencode-4.0.2.tar.gz'
             sha512: c3e3834574ec059a4b571427b29d6f5f26bd806fd7498b9bba778f4eceab6ebe5733eef0f3c4f6af91eb3f2e9310f93f6d7b337c28e85c72db7e59bd79be77a9
+        post-install:
+          - install -Dm644 -t /app/share/licenses/libqrencode COPYING
+        cleanup:
+          - /share/man
 
       - name: libquazip
         buildsystem: cmake-ninja
@@ -175,3 +181,5 @@ modules:
             commit: 243a411091d7610be930a10ad225c5ae85415079
           - type: patch
             path: patch/quazip/0001-Fix-cmake-module-install-path.patch
+        post-install:
+          - install -Dm644 -t /app/share/licenses/libquazip COPYING

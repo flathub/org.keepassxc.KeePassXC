@@ -1,0 +1,51 @@
+From 349abe506fc9ffbb4c80ad57b9866a042eb6791d Mon Sep 17 00:00:00 2001
+From: AsavarTzeth <asavartzeth@gmail.com>
+Date: Fri, 22 Mar 2019 17:02:22 +0100
+Subject: [PATCH 4/4] Use RuntimeDirectory for opening attachments
+
+There is a minor lack of consistency when as to where temporary files,
+sockets etc should be located. Sometimes there are good reasons, but
+not always.
+
+With this change attachments can be opened by other applications without
+the need to share all of /tmp with other applications. It only applies
+to Flatpak for now, but can easily be adjusted to apply everywhere.
+
+This change does not affect the main keepassxc lock file and the related
+socket. That cannot change without upstream, since all packages need to
+use the same path. Because of this, /tmp still cannot be sandboxed.
+---
+ src/gui/entry/EntryAttachmentsWidget.cpp | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/src/gui/entry/EntryAttachmentsWidget.cpp b/src/gui/entry/EntryAttachmentsWidget.cpp
+index 810b4bde..396ab7d7 100644
+--- a/src/gui/entry/EntryAttachmentsWidget.cpp
++++ b/src/gui/entry/EntryAttachmentsWidget.cpp
+@@ -1,5 +1,6 @@
+ #include "EntryAttachmentsWidget.h"
+ #include "ui_EntryAttachmentsWidget.h"
++#include "config-keepassx.h"
+ 
+ #include <QDesktopServices>
+ #include <QDir>
+@@ -323,8 +324,15 @@ bool EntryAttachmentsWidget::openAttachment(const QModelIndex& index, QString& e
+     const QString filename = m_attachmentsModel->keyByIndex(index);
+     const QByteArray attachmentData = m_entryAttachments->value(filename);
+ 
++#ifdef KEEPASSXC_DIST_FLATPAK
++    QString baseDir = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
++    // This path is available to Flatpak apps and the host system by default
++    baseDir.append("/app/org.keepassxc.KeePassXC");
++#else
++    QString baseDir = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
++#endif
+     // tmp file will be removed once the database (or the application) has been closed
+-    const QString tmpFileTemplate = QDir::temp().absoluteFilePath(QString("XXXXXX.").append(filename));
++    const QString tmpFileTemplate = baseDir + "/" + QString("XXXXXX.").append(filename);
+ 
+     QScopedPointer<QTemporaryFile> tmpFile(new QTemporaryFile(tmpFileTemplate, this));
+ 
+-- 
+2.21.0
+

@@ -1,7 +1,7 @@
 From f122ca604fe473112269f23a94215910c1ff31e0 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Mon, 28 May 2018 21:29:15 +0200
-Subject: [PATCH 3/3] Fix KeePassXC-Browser interaction with Flatpak
+Subject: [PATCH 3/4] Fix KeePassXC-Browser interaction with Flatpak
 
 By default, `keepassxc-proxy` will act as a proxy between `keepassxc`
 and a browser. The browser communicates using the Native Messaging Host

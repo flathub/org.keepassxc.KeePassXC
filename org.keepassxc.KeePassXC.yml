@@ -25,7 +25,7 @@ finish-args:
   - --share=network
     # YubiKey USB access
   - --device=all
-    # Access to temporary files (should use xdg-run, similar to patch 0003)
+    # Access to temporary files (Remove if RuntimeDirectory patch is upstreamed)
   - --filesystem=/tmp
     # KeePassXC-Browser Extension
   - --filesystem=xdg-config/google-chrome/NativeMessagingHosts:create
@@ -63,6 +63,8 @@ modules:
         path: patch/keepassxc/0002-Use-reverse-dns-for-flatpak-exportable-files.patch
       - type: patch
         path: patch/keepassxc/0003-Fix-KeePassXC-Browser-interaction-with-Flatpak.patch
+      - type: patch
+        path: patch/keepassxc/0004-Use-RuntimeDirectory-for-opening-attachments.patch
     post-install:
       - install -Dm755 -t /app/bin command-wrapper.sh
       - |

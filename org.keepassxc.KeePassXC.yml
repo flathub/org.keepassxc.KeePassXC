@@ -163,6 +163,10 @@ modules:
           - /bin
 
       - name: libqrencode
+        buildsystem: cmake-ninja
+        config-opts:
+          - -DWITH_TOOLS=NO
+          - -DBUILD_SHARED_LIBS=YES
         sources:
           - type: archive
             url: 'https://fukuchi.org/works/qrencode/qrencode-4.0.2.tar.gz'

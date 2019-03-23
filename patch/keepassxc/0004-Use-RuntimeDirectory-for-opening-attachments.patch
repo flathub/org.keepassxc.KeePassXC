@@ -1,4 +1,4 @@
-From 349abe506fc9ffbb4c80ad57b9866a042eb6791d Mon Sep 17 00:00:00 2001
+From 1b58e2954a2bf1ae7389e9749b58e9e228f75026 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Fri, 22 Mar 2019 17:02:22 +0100
 Subject: [PATCH 4/4] Use RuntimeDirectory for opening attachments

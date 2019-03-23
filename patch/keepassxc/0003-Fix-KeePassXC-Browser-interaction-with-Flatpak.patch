@@ -1,4 +1,4 @@
-From f122ca604fe473112269f23a94215910c1ff31e0 Mon Sep 17 00:00:00 2001
+From 24a5d56df096cd86b3b89c34b4717572c29cbeb5 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Mon, 28 May 2018 21:29:15 +0200
 Subject: [PATCH 3/4] Fix KeePassXC-Browser interaction with Flatpak

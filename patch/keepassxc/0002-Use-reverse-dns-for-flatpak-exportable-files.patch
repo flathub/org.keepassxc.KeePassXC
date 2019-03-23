@@ -1,4 +1,4 @@
-From 9ff2589ee7ebc27435da93b4130f662f427bfa8f Mon Sep 17 00:00:00 2001
+From 7215fdb15125827a3d2f84d6a29b298f39438eef Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Mon, 18 Mar 2019 19:17:41 +0100
 Subject: [PATCH 2/4] Use reverse-dns for flatpak exportable files
@@ -9,21 +9,21 @@ includes the mime type xml file.
 Ensures that all icons and MIME types are made available to the rest of
 the system. Otherwise it would only be available inside the sandbox.
 ---
- share/CMakeLists.txt                          | 48 +++++++++++++++----
+ share/CMakeLists.txt                          | 50 +++++++++++++++----
  share/linux/.gitignore                        |  3 ++
  .../linux/{keepassxc.xml => keepassxc.xml.in} |  2 +-
  ...top => org.keepassxc.KeePassXC.desktop.in} |  2 +-
- src/core/FilePath.cpp                         | 16 +++++--
- 5 files changed, 56 insertions(+), 15 deletions(-)
+ src/core/FilePath.cpp                         | 16 ++++--
+ 5 files changed, 58 insertions(+), 15 deletions(-)
  create mode 100644 share/linux/.gitignore
  rename share/linux/{keepassxc.xml => keepassxc.xml.in} (85%)
  rename share/linux/{org.keepassxc.KeePassXC.desktop => org.keepassxc.KeePassXC.desktop.in} (96%)
 
 diff --git a/share/CMakeLists.txt b/share/CMakeLists.txt
-index 214c0ec9..f70efd4d 100644
+index 214c0ec9..4359e440 100644
 --- a/share/CMakeLists.txt
 +++ b/share/CMakeLists.txt
-@@ -24,15 +24,45 @@ file(GLOB DATABASE_ICONS icons/database/*.png)
+@@ -24,15 +24,47 @@ file(GLOB DATABASE_ICONS icons/database/*.png)
  install(FILES ${DATABASE_ICONS} DESTINATION ${DATA_INSTALL_DIR}/icons/database)
  
  if(UNIX AND NOT APPLE)
@@ -39,11 +39,11 @@ index 214c0ec9..f70efd4d 100644
 +    # Flatpak requires all files made available to the host to use the reverse-dns style id
 +    if(KEEPASSXC_DIST_FLATPAK)
 +        set(APP_ICON "${ID}")
-+        set(MIME_ICON "${ID}")
++        set(MIME_ICON "${ID}.mime")
 +        configure_file(linux/keepassxc.xml.in linux/${ID}.xml @ONLY)
 +        install(FILES linux/${ID}.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/mime/packages)
 +
-+        file(GLOB_RECURSE ICON_FILES LIST_DIRECTORIES false 
++        file(GLOB_RECURSE ICON_FILES LIST_DIRECTORIES false
 +             "icons/application/*/keepassxc*.png"
 +             "icons/application/*/keepassxc*.svg"
 +             "icons/application/*/application-x-keepassxc.png"
@@ -52,8 +52,10 @@ index 214c0ec9..f70efd4d 100644
 +            get_filename_component(icon_name ${icon_src} NAME)
 +            get_filename_component(dir_src ${icon_src} DIRECTORY)
 +            # Rename icons to match id. Install files like "keepassxc-dark" to "org.keepassxc.KeePassXC.dark"
++            string(REGEX REPLACE "^application-x-keepassxc(\\.png|\\.svg)$"
++                                 "${MIME_ICON}\\1" icon_name ${icon_name})
 +            string(REPLACE "-" "." icon_name ${icon_name})
-+            string(REGEX REPLACE "^.*keepassxc(.*)?(\\.png|\\.svg)$"
++            string(REGEX REPLACE "^keepassxc(.*)?(\\.png|\\.svg)$"
 +                                 "${ID}\\1\\2" icon_dest_name ${icon_name})
 +            file(RELATIVE_PATH icon_dir ${CMAKE_CURRENT_SOURCE_DIR}/icons/application ${dir_src})
 +            install(FILES ${icon_src} DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/${icon_dir}

@@ -35,6 +35,9 @@ finish-args:
   - --filesystem=~/.tor-browser/app/Browser/TorBrowser/Data/Browser/.mozilla/native-messaging-hosts:create
     # SSH Agent access
   - --socket=ssh-auth
+    # Host access: workaround extensive portal issues
+    # (use beta branch for testing of portals based file access)
+  - --filesystem=host
 cleanup:
   - '*.a'
   - '*.h'

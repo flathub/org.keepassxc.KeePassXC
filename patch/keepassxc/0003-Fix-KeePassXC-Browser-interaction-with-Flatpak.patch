@@ -1,4 +1,4 @@
-From 24a5d56df096cd86b3b89c34b4717572c29cbeb5 Mon Sep 17 00:00:00 2001
+From da230248cc0766e968f023bb7ae1b0283067ce7c Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Mon, 28 May 2018 21:29:15 +0200
 Subject: [PATCH 3/4] Fix KeePassXC-Browser interaction with Flatpak
@@ -34,7 +34,7 @@ Hopefully in the future the Native Messaging Host API will support D-Bus.
  3 files changed, 27 insertions(+), 2 deletions(-)
 
 diff --git a/src/browser/BrowserOptionDialog.cpp b/src/browser/BrowserOptionDialog.cpp
-index dd91f159..292c68a7 100644
+index 9eecc63f..5ca678d6 100644
 --- a/src/browser/BrowserOptionDialog.cpp
 +++ b/src/browser/BrowserOptionDialog.cpp
 @@ -52,6 +52,7 @@ BrowserOptionDialog::BrowserOptionDialog(QWidget* parent)
@@ -67,8 +67,8 @@ index dd91f159..292c68a7 100644
 +#endif
  
  #ifdef Q_OS_WIN
-     // Vivaldi uses Chrome's registry settings
-@@ -144,8 +149,17 @@ void BrowserOptionDialog::loadSettings()
+     // Brave uses Chrome's registry settings
+@@ -147,8 +152,17 @@ void BrowserOptionDialog::loadSettings()
                                                    MessageWidget::Warning);
      m_ui->browserGlobalWarningWidget->setCloseButtonVisible(false);
      m_ui->browserGlobalWarningWidget->setAutoHideTimeout(-1);
@@ -86,7 +86,7 @@ index dd91f159..292c68a7 100644
      // Check for native messaging host location errors
      QString path;
      if (!settings->checkIfProxyExists(path)) {
-@@ -156,6 +170,7 @@ void BrowserOptionDialog::loadSettings()
+@@ -159,6 +173,7 @@ void BrowserOptionDialog::loadSettings()
      } else {
          m_ui->scriptWarningWidget->setVisible(false);
      }
@@ -95,10 +95,10 @@ index dd91f159..292c68a7 100644
  
  void BrowserOptionDialog::saveSettings()
 diff --git a/src/browser/HostInstaller.cpp b/src/browser/HostInstaller.cpp
-index 08782fa1..aa81967e 100644
+index 20c55456..1f30b217 100644
 --- a/src/browser/HostInstaller.cpp
 +++ b/src/browser/HostInstaller.cpp
-@@ -249,12 +249,18 @@ QString HostInstaller::getInstallDir(SupportedBrowsers browser) const
+@@ -257,12 +257,18 @@ QString HostInstaller::getInstallDir(SupportedBrowsers browser) const
  QString HostInstaller::getProxyPath(const bool& proxy, const QString& location) const
  {
      QString path;

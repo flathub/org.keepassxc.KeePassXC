@@ -33,6 +33,7 @@ finish-args:
   - --filesystem=~/.mozilla/native-messaging-hosts:create
   - --filesystem=xdg-config/vivaldi/NativeMessagingHosts:create
   - --filesystem=~/.tor-browser/app/Browser/TorBrowser/Data/Browser/.mozilla/native-messaging-hosts:create
+  - --filesystem=xdg-config/BraveSoftware/Brave-Browser/NativeMessagingHosts:create
     # SSH Agent access
   - --socket=ssh-auth
     # Host access: workaround extensive portal issues

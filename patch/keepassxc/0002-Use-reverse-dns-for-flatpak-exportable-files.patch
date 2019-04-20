@@ -1,4 +1,4 @@
-From 7215fdb15125827a3d2f84d6a29b298f39438eef Mon Sep 17 00:00:00 2001
+From 1d3858bff8ad1871c63ef20671342c3a2ef62a4c Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Mon, 18 Mar 2019 19:17:41 +0100
 Subject: [PATCH 2/4] Use reverse-dns for flatpak exportable files
@@ -20,13 +20,13 @@ the system. Otherwise it would only be available inside the sandbox.
  rename share/linux/{org.keepassxc.KeePassXC.desktop => org.keepassxc.KeePassXC.desktop.in} (96%)
 
 diff --git a/share/CMakeLists.txt b/share/CMakeLists.txt
-index 214c0ec9..4359e440 100644
+index 635ee596..98163a5c 100644
 --- a/share/CMakeLists.txt
 +++ b/share/CMakeLists.txt
 @@ -24,15 +24,47 @@ file(GLOB DATABASE_ICONS icons/database/*.png)
  install(FILES ${DATABASE_ICONS} DESTINATION ${DATA_INSTALL_DIR}/icons/database)
  
- if(UNIX AND NOT APPLE)
+ if(UNIX AND NOT APPLE AND NOT HAIKU)
 -    install(DIRECTORY icons/application/ DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor
 -            FILES_MATCHING PATTERN "keepassx*.png" PATTERN "keepassx*.svg"
 -            PATTERN "status" EXCLUDE PATTERN "actions" EXCLUDE PATTERN "categories" EXCLUDE)
@@ -77,7 +77,7 @@ index 214c0ec9..4359e440 100644
 +    configure_file(linux/${ID}.desktop.in linux/${ID}.desktop @ONLY)
 +    install(FILES linux/${ID}.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 +    install(FILES linux/${ID}.appdata.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo)
- endif(UNIX AND NOT APPLE)
+ endif(UNIX AND NOT APPLE AND NOT HAIKU)
  
  if(APPLE)
 diff --git a/share/linux/.gitignore b/share/linux/.gitignore

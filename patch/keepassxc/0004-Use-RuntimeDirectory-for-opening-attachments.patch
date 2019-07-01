@@ -1,4 +1,4 @@
-From 1635d0c66f03ff109df2119abe43997e731dba26 Mon Sep 17 00:00:00 2001
+From dbf27977f16e31ddd6afd9b4a0d0c941f4b6d0a9 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Fri, 22 Mar 2019 17:02:22 +0100
 Subject: [PATCH 4/4] Use RuntimeDirectory for opening attachments
@@ -15,11 +15,11 @@ This change does not affect the main keepassxc lock file and the related
 socket. That cannot change without upstream, since all packages need to
 use the same path. Because of this, /tmp still cannot be sandboxed.
 ---
- src/gui/entry/EntryAttachmentsWidget.cpp | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ src/gui/entry/EntryAttachmentsWidget.cpp | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/src/gui/entry/EntryAttachmentsWidget.cpp b/src/gui/entry/EntryAttachmentsWidget.cpp
-index 810b4bde..396ab7d7 100644
+index 9610cc05..9bb38272 100644
 --- a/src/gui/entry/EntryAttachmentsWidget.cpp
 +++ b/src/gui/entry/EntryAttachmentsWidget.cpp
 @@ -1,5 +1,6 @@
@@ -29,23 +29,22 @@ index 810b4bde..396ab7d7 100644
  
  #include <QDesktopServices>
  #include <QDir>
-@@ -323,8 +324,15 @@ bool EntryAttachmentsWidget::openAttachment(const QModelIndex& index, QString& e
-     const QString filename = m_attachmentsModel->keyByIndex(index);
+@@ -326,9 +327,14 @@ bool EntryAttachmentsWidget::openAttachment(const QModelIndex& index, QString& e
      const QByteArray attachmentData = m_entryAttachments->value(filename);
  
-+#ifdef KEEPASSXC_DIST_FLATPAK
-+    QString baseDir = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
-+    // This path is available to Flatpak apps and the host system by default
-+    baseDir.append("/app/org.keepassxc.KeePassXC");
-+#else
-+    QString baseDir = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
-+#endif
      // tmp file will be removed once the database (or the application) has been closed
--    const QString tmpFileTemplate = QDir::temp().absoluteFilePath(QString("XXXXXX.").append(filename));
-+    const QString tmpFileTemplate = baseDir + "/" + QString("XXXXXX.").append(filename);
- 
-     QScopedPointer<QTemporaryFile> tmpFile(new QTemporaryFile(tmpFileTemplate, this));
- 
+-#ifdef KEEPASSXC_DIST_SNAP
++
++#if defined(KEEPASSXC_DIST_SNAP)
+     const QString tmpFileTemplate =
+         QString("%1/XXXXXX.%2").arg(QProcessEnvironment::systemEnvironment().value("SNAP_USER_DATA"), filename);
++#elif defined(KEEPASSXC_DIST_FLATPAK)
++    const QString tmpFileTemplate =
++        QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation)
++        + "/app/org.keepassxc.KeePassXC/" + filename;
+ #else
+     const QString tmpFileTemplate = QDir::temp().absoluteFilePath(QString("XXXXXX.").append(filename));
+ #endif
 -- 
-2.21.0
+2.22.0
 

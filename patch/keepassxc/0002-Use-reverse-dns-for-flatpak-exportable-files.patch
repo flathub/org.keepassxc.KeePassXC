@@ -1,4 +1,4 @@
-From 1d3858bff8ad1871c63ef20671342c3a2ef62a4c Mon Sep 17 00:00:00 2001
+From 34c3e40205a912a92202efd01bd261e457498d40 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Mon, 18 Mar 2019 19:17:41 +0100
 Subject: [PATCH 2/4] Use reverse-dns for flatpak exportable files
@@ -173,5 +173,5 @@ index 5b032270..bbad6f80 100644
      return darkIcon ? icon("apps", "keepassxc-dark") : icon("apps", "keepassxc-unlocked");
  #endif
 -- 
-2.21.0
+2.22.0
 

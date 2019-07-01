@@ -1,4 +1,4 @@
-From da11533f66c1724a9b295c0e707d0645051dbd1f Mon Sep 17 00:00:00 2001
+From 14edc70e3843de29de40b571398518c95d386f5a Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Thu, 1 Mar 2018 10:33:22 +0100
 Subject: [PATCH 1/4] Add flatpak distribution type
@@ -17,7 +17,7 @@ gui, so that bug reports correctly reflect this.
  2 files changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 16d574f0..13624462 100644
+index 74b1a7ff..596d2c8c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -17,6 +17,7 @@
@@ -28,7 +28,7 @@ index 16d574f0..13624462 100644
  
  if(NOT CMAKE_BUILD_TYPE)
      set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING
-@@ -149,11 +150,13 @@ message(STATUS "Setting up build for KeePassXC v${KEEPASSXC_VERSION}\n")
+@@ -147,11 +148,13 @@ message(STATUS "Setting up build for KeePassXC v${KEEPASSXC_VERSION}\n")
  # Distribution info
  set(KEEPASSXC_DIST ON)
  set(KEEPASSXC_DIST_TYPE "Other" CACHE STRING "KeePassXC Distribution Type")
@@ -56,5 +56,5 @@ index 2acff446..134b948b 100644
  #cmakedefine HAVE_PR_SET_DUMPABLE 1
  #cmakedefine HAVE_RLIMIT_CORE 1
 -- 
-2.21.0
+2.22.0
 

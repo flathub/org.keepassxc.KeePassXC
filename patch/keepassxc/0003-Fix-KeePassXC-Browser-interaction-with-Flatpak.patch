@@ -1,4 +1,4 @@
-From da230248cc0766e968f023bb7ae1b0283067ce7c Mon Sep 17 00:00:00 2001
+From bc60354c1507831f92e91a37992cfd9d713486ca Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Mon, 28 May 2018 21:29:15 +0200
 Subject: [PATCH 3/4] Fix KeePassXC-Browser interaction with Flatpak
@@ -34,7 +34,7 @@ Hopefully in the future the Native Messaging Host API will support D-Bus.
  3 files changed, 27 insertions(+), 2 deletions(-)
 
 diff --git a/src/browser/BrowserOptionDialog.cpp b/src/browser/BrowserOptionDialog.cpp
-index 9eecc63f..5ca678d6 100644
+index e212fc6b..55923541 100644
 --- a/src/browser/BrowserOptionDialog.cpp
 +++ b/src/browser/BrowserOptionDialog.cpp
 @@ -52,6 +52,7 @@ BrowserOptionDialog::BrowserOptionDialog(QWidget* parent)
@@ -68,7 +68,7 @@ index 9eecc63f..5ca678d6 100644
  
  #ifdef Q_OS_WIN
      // Brave uses Chrome's registry settings
-@@ -147,8 +152,17 @@ void BrowserOptionDialog::loadSettings()
+@@ -148,8 +153,17 @@ void BrowserOptionDialog::loadSettings()
                                                    MessageWidget::Warning);
      m_ui->browserGlobalWarningWidget->setCloseButtonVisible(false);
      m_ui->browserGlobalWarningWidget->setAutoHideTimeout(-1);
@@ -86,7 +86,7 @@ index 9eecc63f..5ca678d6 100644
      // Check for native messaging host location errors
      QString path;
      if (!settings->checkIfProxyExists(path)) {
-@@ -159,6 +173,7 @@ void BrowserOptionDialog::loadSettings()
+@@ -160,6 +174,7 @@ void BrowserOptionDialog::loadSettings()
      } else {
          m_ui->scriptWarningWidget->setVisible(false);
      }
@@ -119,7 +119,7 @@ index 20c55456..1f30b217 100644
      if (proxy) {
          if (!location.isEmpty()) {
 diff --git a/src/browser/NativeMessagingBase.cpp b/src/browser/NativeMessagingBase.cpp
-index a6b8d97c..16115fb6 100644
+index 33592ce3..e67a0182 100644
 --- a/src/browser/NativeMessagingBase.cpp
 +++ b/src/browser/NativeMessagingBase.cpp
 @@ -17,6 +17,7 @@
@@ -129,11 +129,11 @@ index a6b8d97c..16115fb6 100644
 +#include "config-keepassx.h"
  #include <QStandardPaths>
  
- #if defined(Q_OS_UNIX) && !defined(Q_OS_LINUX)
-@@ -139,6 +140,9 @@ QString NativeMessagingBase::getLocalServerPath() const
+ #include "config-keepassx.h"
+@@ -141,6 +142,9 @@ QString NativeMessagingBase::getLocalServerPath() const
      const QString serverPath = "/kpxc_server";
  #if defined(KEEPASSXC_DIST_SNAP)
-     return QProcessEnvironment::systemEnvironment().value("SNAP_COMMON") + serverPath;
+     return QProcessEnvironment::systemEnvironment().value("SNAP_USER_COMMON") + serverPath;
 +#elif defined(KEEPASSXC_DIST_FLATPAK)
 +    return QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation)
 +        + "/app/org.keepassxc.KeePassXC" + serverPath;
@@ -141,5 +141,5 @@ index a6b8d97c..16115fb6 100644
      // Use XDG_RUNTIME_DIR instead of /tmp if it's available
      QString path = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
 -- 
-2.21.0
+2.22.0
 

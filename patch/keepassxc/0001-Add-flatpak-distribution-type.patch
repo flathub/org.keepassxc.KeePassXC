@@ -1,7 +1,7 @@
 From 14edc70e3843de29de40b571398518c95d386f5a Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Thu, 1 Mar 2018 10:33:22 +0100
-Subject: [PATCH 1/4] Add flatpak distribution type
+Subject: [PATCH 1/5] Add flatpak distribution type
 
 Enable support for the CMake option: KEEPASSXC_DIST_TYPE=Flatpak.
 

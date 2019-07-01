@@ -70,6 +70,8 @@ modules:
         path: patch/keepassxc/0003-Fix-KeePassXC-Browser-interaction-with-Flatpak.patch
       - type: patch
         path: patch/keepassxc/0004-Use-RuntimeDirectory-for-opening-attachments.patch
+      - type: patch
+        path: patch/keepassxc/0005-Add-OARS-metadata.patch
     post-install:
       - install -Dm755 -t /app/bin command-wrapper.sh
       - |

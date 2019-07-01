@@ -1,7 +1,7 @@
 From dbf27977f16e31ddd6afd9b4a0d0c941f4b6d0a9 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Fri, 22 Mar 2019 17:02:22 +0100
-Subject: [PATCH 4/4] Use RuntimeDirectory for opening attachments
+Subject: [PATCH 4/5] Use RuntimeDirectory for opening attachments
 
 There is a minor lack of consistency when as to where temporary files,
 sockets etc should be located. Sometimes there are good reasons, but

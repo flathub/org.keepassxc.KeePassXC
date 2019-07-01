@@ -1,7 +1,7 @@
 From 34c3e40205a912a92202efd01bd261e457498d40 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Mon, 18 Mar 2019 19:17:41 +0100
-Subject: [PATCH 2/4] Use reverse-dns for flatpak exportable files
+Subject: [PATCH 2/5] Use reverse-dns for flatpak exportable files
 
 Includes application icons, tray icons and mime icons. It also
 includes the mime type xml file.

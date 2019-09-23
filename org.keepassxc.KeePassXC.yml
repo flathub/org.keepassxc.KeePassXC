@@ -91,8 +91,8 @@ modules:
         sources:
           - type: git
             url: 'https://github.com/libusb/libusb.git'
-            tag: v1.0.22
-            commit: 0034b2afdcdb1614e78edaa2a9e22d5936aeae5d
+            tag: v1.0.23
+            commit: e782eeb2514266f6738e242cdcb18e3ae1ed06fa
         post-install:
           - install -Dm644 -t /app/share/licenses/libusb COPYING
 

@@ -97,6 +97,8 @@ modules:
           - install -Dm644 -t /app/share/licenses/libusb COPYING
 
       - name: libyubikey
+        config-opts:
+          - --disable-documentation
         sources:
           - type: git
             url: 'https://github.com/Yubico/yubico-c.git'
@@ -106,27 +108,16 @@ modules:
             dest-filename: autogen.sh
             commands:
               - autoreconf --install
+          - type: patch
+            path: patch/yubikey-c/0001-Add-configure-option-to-disable-documentation.patch
         post-install:
           - install -Dm644 -t /app/share/licenses/libyubikey COPYING
         cleanup:
           - /bin
-          - /share/man
-        modules:
-
-          - name: asciidoc
-            sources:
-              - type: git
-                url: 'https://github.com/asciidoc/asciidoc.git'
-                tag: 8.6.10
-                commit: 37f6baaf04e2d6123a1f7318a5ec361d2ed6ca28
-              - type: script
-                dest-filename: autogen.sh
-                commands:
-                  - autoreconf --install
-            cleanup:
-              - '*'
 
       - name: libykpers-1
+        config-opts:
+          - --disable-documentation
         sources:
           - type: git
             url: 'https://github.com/Yubico/yubikey-personalization.git'
@@ -136,11 +127,12 @@ modules:
             dest-filename: autogen.sh
             commands:
               - autoreconf --install
+          - type: patch
+            path: patch/libykpers-1/0001-Add-configure-option-to-disable-documentation.patch
         post-install:
           - install -Dm644 -t /app/share/licenses/libykpers-1 COPYING
         cleanup:
           - /bin
-          - /share/man
 
       - name: libsodium
         sources:

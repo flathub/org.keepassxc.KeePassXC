@@ -36,9 +36,6 @@ finish-args:
   - --filesystem=xdg-config/BraveSoftware/Brave-Browser/NativeMessagingHosts:create
     # SSH Agent access
   - --socket=ssh-auth
-    # Host access: workaround extensive portal issues
-    # (use beta branch for testing of portals based file access)
-  - --filesystem=host
 cleanup:
   - '*.a'
   - '*.h'

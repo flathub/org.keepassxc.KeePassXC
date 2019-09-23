@@ -156,14 +156,16 @@ modules:
         make-args:
           - PREFIX=/app
           - OPTTARGET=none
+          - LIBRARY_REL=lib
         make-install-args:
           - PREFIX=/app
           - OPTTARGET=none
+          - LIBRARY_REL=lib
         sources:
           - type: git
             url: 'https://github.com/P-H-C/phc-winner-argon2.git'
-            tag: '20171227'
-            commit: 670229c849b9fe882583688b74eb7dfdc846f9f6
+            tag: '20190702'
+            commit: 62358ba2123abd17fccf2a108a301d4b52c01a7c
         post-install:
           - install -Dm644 -t /app/share/licenses/libargon2 LICENSE
         cleanup:

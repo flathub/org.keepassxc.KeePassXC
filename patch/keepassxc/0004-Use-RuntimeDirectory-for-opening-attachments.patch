@@ -1,4 +1,4 @@
-From dbf27977f16e31ddd6afd9b4a0d0c941f4b6d0a9 Mon Sep 17 00:00:00 2001
+From 7168ac32c22613b44897426ac80b2e9c9784bcc6 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Fri, 22 Mar 2019 17:02:22 +0100
 Subject: [PATCH 4/5] Use RuntimeDirectory for opening attachments
@@ -46,5 +46,5 @@ index 9610cc05..9bb38272 100644
      const QString tmpFileTemplate = QDir::temp().absoluteFilePath(QString("XXXXXX.").append(filename));
  #endif
 -- 
-2.22.0
+2.24.0
 

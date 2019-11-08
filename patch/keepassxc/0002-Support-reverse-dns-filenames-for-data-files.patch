@@ -1,13 +1,15 @@
-From 34c3e40205a912a92202efd01bd261e457498d40 Mon Sep 17 00:00:00 2001
+From 4c0db5d03382b9e899a19de24a659bcc852ed181 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Mon, 18 Mar 2019 19:17:41 +0100
-Subject: [PATCH 2/5] Use reverse-dns for flatpak exportable files
+Subject: [PATCH 2/5] Support reverse-dns filenames for data files
 
-Includes application icons, tray icons and mime icons. It also
-includes the mime type xml file.
+Flatpak isolates application files from the host, but some files must be
+exported to the host to serve their purpose (ex. desktop entries, icons
+mime types, etc...). Filenames must however be prefixed by the app id, in
+reverse-dns notation (org.keepassxc.KeePassXC).
 
-Ensures that all icons and MIME types are made available to the rest of
-the system. Otherwise it would only be available inside the sandbox.
+If KEEPASSXC_DIST_TYPE=Flatpak is set CMake can now install files with
+exportable filenames, without affecting other distribution types.
 ---
  share/CMakeLists.txt                          | 50 +++++++++++++++----
  share/linux/.gitignore                        |  3 ++
@@ -17,10 +19,10 @@ the system. Otherwise it would only be available inside the sandbox.
  5 files changed, 58 insertions(+), 15 deletions(-)
  create mode 100644 share/linux/.gitignore
  rename share/linux/{keepassxc.xml => keepassxc.xml.in} (85%)
- rename share/linux/{org.keepassxc.KeePassXC.desktop => org.keepassxc.KeePassXC.desktop.in} (96%)
+ rename share/linux/{org.keepassxc.KeePassXC.desktop => org.keepassxc.KeePassXC.desktop.in} (97%)
 
 diff --git a/share/CMakeLists.txt b/share/CMakeLists.txt
-index 635ee596..98163a5c 100644
+index 3a088bb8..68398bfd 100644
 --- a/share/CMakeLists.txt
 +++ b/share/CMakeLists.txt
 @@ -24,15 +24,47 @@ file(GLOB DATABASE_ICONS icons/database/*.png)
@@ -105,14 +107,14 @@ index b26b4db2..15ec1118 100644
    </mime-type>
  </mime-info>
 diff --git a/share/linux/org.keepassxc.KeePassXC.desktop b/share/linux/org.keepassxc.KeePassXC.desktop.in
-similarity index 96%
+similarity index 97%
 rename from share/linux/org.keepassxc.KeePassXC.desktop
 rename to share/linux/org.keepassxc.KeePassXC.desktop.in
-index 6ee0f741..6b0c6da6 100644
+index 541af3c0..ae74f43f 100644
 --- a/share/linux/org.keepassxc.KeePassXC.desktop
 +++ b/share/linux/org.keepassxc.KeePassXC.desktop.in
-@@ -8,7 +8,7 @@ GenericName[ru]=менеджер паролей
- Comment=Community-driven port of the Windows application “KeePass Password Safe”
+@@ -10,7 +10,7 @@ Comment=Community-driven port of the Windows application “KeePass Password Saf
+ Comment[da]=Fællesskabsdrevet port af Windows-programmet “KeePass Password Safe”
  Exec=keepassxc %f
  TryExec=keepassxc
 -Icon=keepassxc
@@ -173,5 +175,5 @@ index 5b032270..bbad6f80 100644
      return darkIcon ? icon("apps", "keepassxc-dark") : icon("apps", "keepassxc-unlocked");
  #endif
 -- 
-2.22.0
+2.24.0
 

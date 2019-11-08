@@ -1,0 +1,199 @@
+From 1fa0238794376f74af783a461dcde211073bca9f Mon Sep 17 00:00:00 2001
+From: AsavarTzeth <asavartzeth@gmail.com>
+Date: Mon, 28 May 2018 21:29:15 +0200
+Subject: [PATCH 3/5] Support KeePassXC-Browser & Flatpak environments
+
+Flatpak browser integration and near feature parity with non-sandboxed
+distribution types. This is primarily enabled by having the kpxc_server
+socket listening in a host and sandbox accessible absolute path, and
+the wrapper script that act as a workaround for a Flatpak limitation.
+
+Additionally there are some Flatpak specific UX improvements like the
+now truly sandbox compatible and fully automatic proxy path detection.
+Custom locations are disabled because it is unintuitive, requires
+a lot of Flatpak knowledge to use and generally makes no sense with
+this distribution type (now that it is managed automatically).
+
+What does work
+
+ - Browser integration, including all supported browsers.
+ - Automatic proxy path detection and updating of manifests.
+ - This works different Flatpak installations: system, user and custom
+   ones as long as the path uses safe POSIX portable file names.
+
+Limitations and caveats
+
+ - The browser cannot be sandboxed or it will not be able to execute
+   commands in the host namespace; i.e. a "native" distribution
+   package, or possibly an AppImage.
+
+Note: A good start in making the Native Messaging Host API more sandbox
+friendly would probably be the addition of D-Bus support, as an
+alternative to stdio. Then a new xdg portal might be feasible.
+---
+ src/browser/BrowserOptionDialog.cpp | 18 ++++++++++++
+ src/browser/HostInstaller.cpp       | 24 +++++++++++++++-
+ src/browser/NativeMessagingBase.cpp |  4 +++
+ utils/flatpak-command-wrapper.sh    | 43 +++++++++++++++++++++++++++++
+ 4 files changed, 88 insertions(+), 1 deletion(-)
+ create mode 100755 utils/flatpak-command-wrapper.sh
+
+diff --git a/src/browser/BrowserOptionDialog.cpp b/src/browser/BrowserOptionDialog.cpp
+index a5bb921d..82645bd6 100644
+--- a/src/browser/BrowserOptionDialog.cpp
++++ b/src/browser/BrowserOptionDialog.cpp
+@@ -143,8 +143,25 @@ void BrowserOptionDialog::loadSettings()
+                                                   MessageWidget::Warning);
+     m_ui->browserGlobalWarningWidget->setCloseButtonVisible(false);
+     m_ui->browserGlobalWarningWidget->setAutoHideTimeout(-1);
++#elif defined(KEEPASSXC_DIST_FLATPAK)
++    // Proxy is always required
++    m_ui->supportBrowserProxy->setChecked(true);
++    m_ui->supportBrowserProxy->setEnabled(false);
++    // Guarantees proxy path works with different flatpak installations
++    m_ui->updateBinaryPath->setChecked(true);
++    m_ui->updateBinaryPath->setEnabled(false);
++    // The sandbox makes custom proxy locations very unintuitive
++    m_ui->useCustomProxy->setChecked(false);
++    m_ui->useCustomProxy->setEnabled(false);
++    m_ui->useCustomProxy->setVisible(false);
++    m_ui->customProxyLocation->setVisible(false);
++    // Won't work with xdg portals and executables that must be browser accessible
++    m_ui->customProxyLocationBrowseButton->setVisible(false);
+ #endif
+ 
++// Flatpak: KeePassXC browsers run in different namespaces. Browser integration only works with host
++// accessible absolute paths, which are unreachable by KeePassXC. This causes false positives.
++#if !defined(KEEPASSXC_DIST_FLATPAK)
+     // Check for native messaging host location errors
+     QString path;
+     if (!settings->checkIfProxyExists(path)) {
+@@ -159,6 +176,7 @@ void BrowserOptionDialog::loadSettings()
+     } else {
+         m_ui->scriptWarningWidget->setVisible(false);
+     }
++#endif
+ }
+ 
+ void BrowserOptionDialog::saveSettings()
+diff --git a/src/browser/HostInstaller.cpp b/src/browser/HostInstaller.cpp
+index 4928ba64..6221a52f 100644
+--- a/src/browser/HostInstaller.cpp
++++ b/src/browser/HostInstaller.cpp
+@@ -27,6 +27,7 @@
+ #include <QMessageBox>
+ #include <QProcessEnvironment>
+ #include <QStandardPaths>
++#include <QRegularExpression>
+ 
+ HostInstaller::HostInstaller()
+     : HOST_NAME("org.keepassxc.keepassxc_browser")
+@@ -253,12 +254,33 @@ QString HostInstaller::getInstallDir(SupportedBrowsers browser) const
+ QString HostInstaller::getProxyPath(const bool& proxy, const QString& location) const
+ {
+     QString path;
+-#ifdef KEEPASSXC_DIST_APPIMAGE
++#if defined(KEEPASSXC_DIST_APPIMAGE)
+     if (proxy && !location.isEmpty()) {
+         path = location;
+     } else {
+         path = QProcessEnvironment::systemEnvironment().value("APPIMAGE");
+     }
++#elif defined(KEEPASSXC_DIST_FLATPAK)
++    if (proxy && !location.isEmpty()) {
++        path = location;
++    } else {
++        // extract parts of the host accessible proxy path from /.flatpak-info
++        QSettings settings("/.flatpak-info",QSettings::IniFormat);
++        settings.beginGroup("Instance");
++        // value of app-path is similar to the proxy path; both have a standard parent directory in common
++        QString appPath = settings.value("app-path").toString();
++
++        QRegularExpression re("^((?:/[\\.\\w-]*)+)+/app(/org\\.keepassxc\\.KeePassXC).*$");
++        QRegularExpressionMatch match = re.match(appPath);
++        if (match.hasMatch()) {
++            // builds a proxy path that should work with any sensible flatpak installation
++            path = match.captured(1) + "/exports/bin" + match.captured(2);
++        } else {
++            // fallback to the most common default path (default system installation)
++            path = "/var/lib/flatpak/exports/bin/org.keepassxc.KeePassXC";
++        }
++        settings.endGroup();
++    }
+ #else
+     if (proxy) {
+         if (!location.isEmpty()) {
+diff --git a/src/browser/NativeMessagingBase.cpp b/src/browser/NativeMessagingBase.cpp
+index b44875b1..8d3a259b 100644
+--- a/src/browser/NativeMessagingBase.cpp
++++ b/src/browser/NativeMessagingBase.cpp
+@@ -17,6 +17,7 @@
+  */
+ 
+ #include "NativeMessagingBase.h"
++#include "config-keepassx.h"
+ #include <QStandardPaths>
+ 
+ #include "config-keepassx.h"
+@@ -141,6 +142,9 @@ QString NativeMessagingBase::getLocalServerPath() const
+     const QString serverPath = "/kpxc_server";
+ #if defined(KEEPASSXC_DIST_SNAP)
+     return QProcessEnvironment::systemEnvironment().value("SNAP_USER_COMMON") + serverPath;
++#elif defined(KEEPASSXC_DIST_FLATPAK)
++    return QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation)
++        + "/app/org.keepassxc.KeePassXC" + serverPath;
+ #elif defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+     // Use XDG_RUNTIME_DIR instead of /tmp if it's available
+     QString path = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
+diff --git a/utils/flatpak-command-wrapper.sh b/utils/flatpak-command-wrapper.sh
+new file mode 100755
+index 00000000..8a4063a5
+--- /dev/null
++++ b/utils/flatpak-command-wrapper.sh
+@@ -0,0 +1,43 @@
++#!/usr/bin/env bash
++#
++# Flatpak Multiple Commands Wrapper
++# Copyright (C) 2017 KeePassXC team <https://keepassxc.org/>
++#
++# This program is free software: you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation, either version 2 or (at your option)
++# version 3 of the License.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program.  If not, see <http://www.gnu.org/licenses/>.
++
++# This script is a workaround to the limitation of one command per Flatpak
++# manifest. It solves this by redirecting stdio to keepassxc-proxy, as
++# necessary, based upon matching command line argeters.
++
++readonly appId='org.keepassxc.KeePassXC'
++# Chromium, Google Chrome, Vivaldi & Brave
++readonly arg1='chrome-extension://oboonakemofpalcgghocfoadofidjkkk'
++# Firefox
++readonly arg2='.mozilla/native-messaging-hosts/org.keepassxc.keepassxc_browser.json'
++# Tor Browser
++readonly arg3='.tor-browser/app/Browser/TorBrowser/Data/Browser/.mozilla/native-messaging-hosts/org.keepassxc.keepassxc_browser.json'
++
++readonly arguments=("${arg1}" "${arg2}" "${arg3}")
++
++# Browser integration is enabled if kpxc_server socket exists
++if [[ -S "${XDG_RUNTIME_DIR}/app/${appId}/kpxc_server" ]]; then
++  for val in "${arguments}"; do
++    if [[ "$1" =~ "${val}" ]]; then
++      keepassxc-proxy "$@"
++    fi
++  done
++fi
++
++# If no arguments are matched or browser integration is off execute keepassxc
++keepassxc "$@"
+-- 
+2.24.0
+

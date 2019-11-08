@@ -2,7 +2,7 @@ id: org.keepassxc.KeePassXC
 runtime: org.kde.Platform
 runtime-version: '5.13'
 sdk: org.kde.Sdk
-command: command-wrapper.sh
+command: keepassxc-wrapper
 finish-args:
     # X11 + XShm access
   - --share=ipc
@@ -58,22 +58,20 @@ modules:
       - -DWITH_XC_UPDATECHECK=OFF
     sources:
       - type: archive
-        url: 'https://github.com/keepassxreboot/keepassxc/releases/download/2.4.3/keepassxc-2.4.3-src.tar.xz'
-        sha256: d7c952192131047689c3f8fb7275df0e0dfbf2094a554dbbee9a6d6cfa8f2734
-      - type: file
-        path: command-wrapper.sh
+        url: 'https://github.com/keepassxreboot/keepassxc/releases/download/2.5.0/keepassxc-2.5.0-src.tar.xz'
+        sha256: 6359ce972b720a8bce1e8ba54000666e9c58f9164f2e9e52bef2e24e46127881
       - type: patch
         path: patch/keepassxc/0001-Add-flatpak-distribution-type.patch
       - type: patch
-        path: patch/keepassxc/0002-Use-reverse-dns-for-flatpak-exportable-files.patch
+        path: patch/keepassxc/0002-Support-reverse-dns-filenames-for-data-files.patch
       - type: patch
-        path: patch/keepassxc/0003-Fix-KeePassXC-Browser-interaction-with-Flatpak.patch
+        path: patch/keepassxc/0003-Support-KeePassXC-Browser-Flatpak-environments.patch
       - type: patch
         path: patch/keepassxc/0004-Use-RuntimeDirectory-for-opening-attachments.patch
       - type: patch
         path: patch/keepassxc/0005-Add-OARS-metadata.patch
     post-install:
-      - install -Dm755 -t /app/bin command-wrapper.sh
+      - install -Dm755 ./utils/flatpak-command-wrapper.sh /app/bin/keepassxc-wrapper
       - |
         for f in COPYING LICENSE*; do
           install -Dm644 $f /app/share/licenses/org.keepassxc.KeePassXC/$f

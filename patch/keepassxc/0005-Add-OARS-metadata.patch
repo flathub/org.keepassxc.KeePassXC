@@ -1,4 +1,4 @@
-From d48f2891bd7fb883a070f520494327d3e46b3ded Mon Sep 17 00:00:00 2001
+From 097942989fdb3e837acc34c7c4fa5050b347bb68 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Mon, 1 Jul 2019 17:27:58 +0200
 Subject: [PATCH 5/5] Add OARS metadata
@@ -25,15 +25,15 @@ they have on that IP.
  1 file changed, 1 insertion(+)
 
 diff --git a/share/linux/org.keepassxc.KeePassXC.appdata.xml b/share/linux/org.keepassxc.KeePassXC.appdata.xml
-index b8e8c36d..76e59944 100644
+index 69d26cf5..fe83a6e8 100644
 --- a/share/linux/org.keepassxc.KeePassXC.appdata.xml
 +++ b/share/linux/org.keepassxc.KeePassXC.appdata.xml
-@@ -447,4 +447,5 @@
+@@ -528,4 +528,5 @@
              </description>
          </release>
      </releases>
 +    <content_rating type="oars-1.0" />
  </component>
 -- 
-2.22.0
+2.24.0
 

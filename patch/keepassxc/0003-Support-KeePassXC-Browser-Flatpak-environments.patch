@@ -1,4 +1,4 @@
-From 1fa0238794376f74af783a461dcde211073bca9f Mon Sep 17 00:00:00 2001
+From dc8d08a01505b3d2fad7dc3b53eb38c54eaae2c8 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Mon, 28 May 2018 21:29:15 +0200
 Subject: [PATCH 3/5] Support KeePassXC-Browser & Flatpak environments
@@ -31,11 +31,11 @@ Note: A good start in making the Native Messaging Host API more sandbox
 friendly would probably be the addition of D-Bus support, as an
 alternative to stdio. Then a new xdg portal might be feasible.
 ---
- src/browser/BrowserOptionDialog.cpp | 18 ++++++++++++
- src/browser/HostInstaller.cpp       | 24 +++++++++++++++-
+ src/browser/BrowserOptionDialog.cpp | 18 +++++++++++++
+ src/browser/HostInstaller.cpp       | 24 ++++++++++++++++-
  src/browser/NativeMessagingBase.cpp |  4 +++
- utils/flatpak-command-wrapper.sh    | 43 +++++++++++++++++++++++++++++
- 4 files changed, 88 insertions(+), 1 deletion(-)
+ utils/flatpak-command-wrapper.sh    | 40 +++++++++++++++++++++++++++++
+ 4 files changed, 85 insertions(+), 1 deletion(-)
  create mode 100755 utils/flatpak-command-wrapper.sh
 
 diff --git a/src/browser/BrowserOptionDialog.cpp b/src/browser/BrowserOptionDialog.cpp
@@ -147,10 +147,10 @@ index b44875b1..8d3a259b 100644
      QString path = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
 diff --git a/utils/flatpak-command-wrapper.sh b/utils/flatpak-command-wrapper.sh
 new file mode 100755
-index 00000000..8a4063a5
+index 00000000..9e5fc8c4
 --- /dev/null
 +++ b/utils/flatpak-command-wrapper.sh
-@@ -0,0 +1,43 @@
+@@ -0,0 +1,40 @@
 +#!/usr/bin/env bash
 +#
 +# Flatpak Multiple Commands Wrapper
@@ -173,27 +173,24 @@ index 00000000..8a4063a5
 +# manifest. It solves this by redirecting stdio to keepassxc-proxy, as
 +# necessary, based upon matching command line argeters.
 +
++# For format of parsed arguments, see "Connection-based messaging" at:
++# https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/Native_messaging
++
 +readonly appId='org.keepassxc.KeePassXC'
 +# Chromium, Google Chrome, Vivaldi & Brave
 +readonly arg1='chrome-extension://oboonakemofpalcgghocfoadofidjkkk'
-+# Firefox
-+readonly arg2='.mozilla/native-messaging-hosts/org.keepassxc.keepassxc_browser.json'
-+# Tor Browser
-+readonly arg3='.tor-browser/app/Browser/TorBrowser/Data/Browser/.mozilla/native-messaging-hosts/org.keepassxc.keepassxc_browser.json'
-+
-+readonly arguments=("${arg1}" "${arg2}" "${arg3}")
++# Firefox & Tor Browser
++readonly arg2='keepassxc-browser@keepassxc.org'
 +
 +# Browser integration is enabled if kpxc_server socket exists
 +if [[ -S "${XDG_RUNTIME_DIR}/app/${appId}/kpxc_server" ]]; then
-+  for val in "${arguments}"; do
-+    if [[ "$1" =~ "${val}" ]]; then
-+      keepassxc-proxy "$@"
-+    fi
-+  done
++  if [[ "$1" =~ "${arg1}" ]] || [[ "$2" =~ "${arg2}" ]]; then
++    keepassxc-proxy "$@" || exit 1
++  fi
 +fi
 +
 +# If no arguments are matched or browser integration is off execute keepassxc
-+keepassxc "$@"
++keepassxc "$@" || exit 0
 -- 
 2.24.0
 

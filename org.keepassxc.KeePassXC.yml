@@ -1,6 +1,6 @@
 id: org.keepassxc.KeePassXC
 runtime: org.kde.Platform
-runtime-version: '5.13'
+runtime-version: '5.14'
 sdk: org.kde.Sdk
 command: keepassxc-wrapper
 finish-args:
@@ -187,9 +187,7 @@ modules:
         sources:
           - type: git
             url: 'https://github.com/stachenov/quazip.git'
-            tag: 0.7.6
-            commit: 243a411091d7610be930a10ad225c5ae85415079
-          - type: patch
-            path: patch/quazip/0001-Fix-cmake-module-install-path.patch
+            tag: v0.8.1
+            commit: 4df6c7412e5d123192f9cc937fb5829f8e9b1afc
         post-install:
           - install -Dm644 -t /app/share/licenses/libquazip COPYING

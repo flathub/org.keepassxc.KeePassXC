@@ -25,10 +25,10 @@ they have on that IP.
  1 file changed, 1 insertion(+)
 
 diff --git a/share/linux/org.keepassxc.KeePassXC.appdata.xml b/share/linux/org.keepassxc.KeePassXC.appdata.xml
-index 69d26cf5..fe83a6e8 100644
+index 872c158..2ac1c85 100644
 --- a/share/linux/org.keepassxc.KeePassXC.appdata.xml
 +++ b/share/linux/org.keepassxc.KeePassXC.appdata.xml
-@@ -528,4 +528,5 @@
+@@ -609,4 +609,5 @@
              </description>
          </release>
      </releases>

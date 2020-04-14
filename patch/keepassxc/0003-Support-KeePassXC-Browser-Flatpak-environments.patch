@@ -31,18 +31,17 @@ Note: A good start in making the Native Messaging Host API more sandbox
 friendly would probably be the addition of D-Bus support, as an
 alternative to stdio. Then a new xdg portal might be feasible.
 ---
- src/browser/BrowserOptionDialog.cpp | 18 +++++++++++++
- src/browser/HostInstaller.cpp       | 24 ++++++++++++++++-
- src/browser/NativeMessagingBase.cpp |  4 +++
- utils/flatpak-command-wrapper.sh    | 40 +++++++++++++++++++++++++++++
+ src/browser/BrowserOptionDialog.cpp | 18 ++++++++++++++++++
+ src/browser/HostInstaller.cpp       | 24 +++++++++++++++++++++++-
+ src/browser/NativeMessagingBase.cpp |  4 ++++
+ utils/flatpak-command-wrapper.sh    | 40 ++++++++++++++++++++++++++++++++++++++++
  4 files changed, 85 insertions(+), 1 deletion(-)
- create mode 100755 utils/flatpak-command-wrapper.sh
 
 diff --git a/src/browser/BrowserOptionDialog.cpp b/src/browser/BrowserOptionDialog.cpp
-index a5bb921d..82645bd6 100644
+index f12c42b..a6bbc15 100644
 --- a/src/browser/BrowserOptionDialog.cpp
 +++ b/src/browser/BrowserOptionDialog.cpp
-@@ -143,8 +143,25 @@ void BrowserOptionDialog::loadSettings()
+@@ -158,8 +158,25 @@ void BrowserOptionDialog::loadSettings()
                                                    MessageWidget::Warning);
      m_ui->browserGlobalWarningWidget->setCloseButtonVisible(false);
      m_ui->browserGlobalWarningWidget->setAutoHideTimeout(-1);
@@ -68,7 +67,7 @@ index a5bb921d..82645bd6 100644
      // Check for native messaging host location errors
      QString path;
      if (!settings->checkIfProxyExists(path)) {
-@@ -159,6 +176,7 @@ void BrowserOptionDialog::loadSettings()
+@@ -174,6 +191,7 @@ void BrowserOptionDialog::loadSettings()
      } else {
          m_ui->scriptWarningWidget->setVisible(false);
      }
@@ -77,7 +76,7 @@ index a5bb921d..82645bd6 100644
  
  void BrowserOptionDialog::saveSettings()
 diff --git a/src/browser/HostInstaller.cpp b/src/browser/HostInstaller.cpp
-index 4928ba64..6221a52f 100644
+index f4ffae3..f6333d9 100644
 --- a/src/browser/HostInstaller.cpp
 +++ b/src/browser/HostInstaller.cpp
 @@ -27,6 +27,7 @@
@@ -88,7 +87,7 @@ index 4928ba64..6221a52f 100644
  
  HostInstaller::HostInstaller()
      : HOST_NAME("org.keepassxc.keepassxc_browser")
-@@ -253,12 +254,33 @@ QString HostInstaller::getInstallDir(SupportedBrowsers browser) const
+@@ -260,12 +261,33 @@ QString HostInstaller::getInstallDir(SupportedBrowsers browser) const
  QString HostInstaller::getProxyPath(const bool& proxy, const QString& location) const
  {
      QString path;
@@ -124,7 +123,7 @@ index 4928ba64..6221a52f 100644
      if (proxy) {
          if (!location.isEmpty()) {
 diff --git a/src/browser/NativeMessagingBase.cpp b/src/browser/NativeMessagingBase.cpp
-index b44875b1..8d3a259b 100644
+index 208d28a..3b27729 100644
 --- a/src/browser/NativeMessagingBase.cpp
 +++ b/src/browser/NativeMessagingBase.cpp
 @@ -17,6 +17,7 @@
@@ -147,7 +146,7 @@ index b44875b1..8d3a259b 100644
      QString path = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
 diff --git a/utils/flatpak-command-wrapper.sh b/utils/flatpak-command-wrapper.sh
 new file mode 100755
-index 00000000..9e5fc8c4
+index 0000000..9e5fc8c
 --- /dev/null
 +++ b/utils/flatpak-command-wrapper.sh
 @@ -0,0 +1,40 @@

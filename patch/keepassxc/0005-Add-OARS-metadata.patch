@@ -1,39 +1,34 @@
-From 6d2c88710c91c649418fd7bdeda7efe8e3d6e30b Mon Sep 17 00:00:00 2001
+From bc40c533eb8585cf4ee224ef7cdbdccbef1aa425 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Mon, 1 Jul 2019 17:27:58 +0200
 Subject: [PATCH 5/5] Add OARS metadata
 
-This is now enforced by Flathub.
+It is usable by both Gnome Software, KDE Discover and web frontends,
+such as Flathub which now enforces OARS.
 
 By using OARS 1.0 all distributions should be supported. Version 1.1
 should work almost everywhere, but there are a few notable distributions
-that lack GNOME Software >= 3.27.3 , such as the current OpenSUSE Leap.
+that still lack GNOME Software >= 3.27.3.
 
-Supposedly it makes no difference in this case since for the type:
-"Application that can connect to the Internet" the OARS generator asks
-the same exact questions in both cases.
+In this case it should not matter, because the OARS data is the same for
+both versions (nothing 1.1 specific is used).
 
-The only question here is if downloading favicons could be considered
-mild ("Mild: Using any online API, e.g. a user-counter") information
-sharing?
-
-Supposedly Google or DuckDuckGo could at the very least store your IP
-address, and correlate the icon you downloaded with whatever other data
-they have on that IP.
+You can generate and verify these changes using:
+https://odrs.gnome.org/oars
 ---
  share/linux/org.keepassxc.KeePassXC.appdata.xml | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/share/linux/org.keepassxc.KeePassXC.appdata.xml b/share/linux/org.keepassxc.KeePassXC.appdata.xml
-index 872c158..2ac1c85 100644
+index 9227251d..40264b70 100644
 --- a/share/linux/org.keepassxc.KeePassXC.appdata.xml
 +++ b/share/linux/org.keepassxc.KeePassXC.appdata.xml
-@@ -609,4 +609,5 @@
+@@ -614,4 +614,5 @@
              </description>
          </release>
      </releases>
 +    <content_rating type="oars-1.0" />
  </component>
 -- 
-2.24.0
+2.27.0
 

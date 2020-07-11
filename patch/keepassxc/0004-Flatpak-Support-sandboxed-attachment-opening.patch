@@ -1,0 +1,55 @@
+From 8c2f231a56b61d518af72a8650dc11021ce78f58 Mon Sep 17 00:00:00 2001
+From: AsavarTzeth <asavartzeth@gmail.com>
+Date: Fri, 22 Mar 2019 17:02:22 +0100
+Subject: [PATCH 4/5] Flatpak: Support sandboxed attachment opening
+
+Ensure that xdg portals can open attachment files, while simultaneously
+removing one of the reasons for the non-sandboxed /tmp.
+The path: $XDG_RUNTIME_DIR/app/$FLATPAK_ID is used for flatpak because
+it exists, respects XDG standards and is host accessible by default.
+
+Unfortunately the /tmp sandbox permission is still required due to the
+keepassxc lock file and unix socket which requires a common path across
+distribution types. This is unfortunate since /tmp forces a needlessly
+broad sandbox permission when KeePassXC really only needs it to be
+accessible by itself (including other instances). The document portal
+should cover the rest.
+
+- Fixes sandboxed attachment opening.
+- Preferably $XDG_RUNTIME_DIR should be used when available.
+- Using /tmp needlessly weakens the sandbox.
+- This is more consistent with how things are handled with snaps.
+---
+ src/gui/entry/EntryAttachmentsWidget.cpp | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/src/gui/entry/EntryAttachmentsWidget.cpp b/src/gui/entry/EntryAttachmentsWidget.cpp
+index a614c4f3..5d01efa2 100644
+--- a/src/gui/entry/EntryAttachmentsWidget.cpp
++++ b/src/gui/entry/EntryAttachmentsWidget.cpp
+@@ -1,5 +1,6 @@
+ #include "EntryAttachmentsWidget.h"
+ #include "ui_EntryAttachmentsWidget.h"
++#include "config-keepassx.h"
+ 
+ #include <QDesktopServices>
+ #include <QDir>
+@@ -328,9 +329,14 @@ bool EntryAttachmentsWidget::openAttachment(const QModelIndex& index, QString& e
+     const QByteArray attachmentData = m_entryAttachments->value(filename);
+ 
+     // tmp file will be removed once the database (or the application) has been closed
+-#ifdef KEEPASSXC_DIST_SNAP
++
++#if defined(KEEPASSXC_DIST_SNAP)
+     const QString tmpFileTemplate =
+         QString("%1/XXXXXX.%2").arg(QProcessEnvironment::systemEnvironment().value("SNAP_USER_DATA"), filename);
++#elif defined(KEEPASSXC_DIST_FLATPAK)
++    const QString tmpFileTemplate =
++        QString("%1/app/%2/XXXXXX.%3").arg(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation),
++                QProcessEnvironment::systemEnvironment().value("FLATPAK_ID"), filename);
+ #else
+     const QString tmpFileTemplate = QDir::temp().absoluteFilePath(QString("XXXXXX.").append(filename));
+ #endif
+-- 
+2.27.0
+

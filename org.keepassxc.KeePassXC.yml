@@ -47,7 +47,10 @@ cleanup:
   - /lib/pkgconfig
 modules:
   - name: keepassxc
-    buildsystem: cmake-ninja
+    buildsystem: cmake
+    build-options:
+      env:
+        GEM_PATH: /app/lib/ruby/gems/2.6.0
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
       - -DKEEPASSXC_DIST_TYPE=Flatpak
@@ -63,18 +66,20 @@ modules:
       - -DWITH_XC_FDOSECRETS=OFF
     sources:
       - type: archive
-        url: 'https://github.com/keepassxreboot/keepassxc/releases/download/2.5.4/keepassxc-2.5.4-src.tar.xz'
-        sha256: a55e0801c318b02b1ac4e16e9b7a87ccfa7b039ea60d2c62610bd1bbbdd6cd4a
+        url: 'https://github.com/keepassxreboot/keepassxc/releases/download/2.6.0/keepassxc-2.6.0-src.tar.xz'
+        sha256: d0d23d97a73ac1cbf59bfca2f5d1506ae36dfcd4fbfb4225efe19931f035fd3a
       - type: patch
         path: patch/keepassxc/0001-Add-flatpak-distribution-type.patch
       - type: patch
         path: patch/keepassxc/0002-Support-reverse-dns-filenames-for-data-files.patch
       - type: patch
-        path: patch/keepassxc/0003-Support-KeePassXC-Browser-Flatpak-environments.patch
+        path: patch/keepassxc/0003-Flatpak-Support-KeePassXC-Browser-integration.patch
       - type: patch
-        path: patch/keepassxc/0004-Use-RuntimeDirectory-for-opening-attachments.patch
+        path: patch/keepassxc/0004-Flatpak-Support-sandboxed-attachment-opening.patch
       - type: patch
         path: patch/keepassxc/0005-Add-OARS-metadata.patch
+      - type: patch
+        path: patch/keepassxc/0006-Fix-appdata-screenshots.patch
     post-install:
       - install -Dm755 ./utils/flatpak-command-wrapper.sh /app/bin/keepassxc-wrapper
       - |
@@ -180,3 +185,16 @@ modules:
             commit: 4df6c7412e5d123192f9cc937fb5829f8e9b1afc
         post-install:
           - install -Dm644 -t /app/share/licenses/libquazip COPYING
+
+      - name: asciidoctor
+        buildsystem: simple
+        build-commands:
+          - gem install --ignore-dependencies --no-user-install --verbose --local
+                        --install-dir /app/lib/ruby/gems/2.6.0 --bindir /app/bin
+                        asciidoctor-2.0.10.gem
+        sources:
+          - type: file
+            url: 'https://rubygems.org/downloads/asciidoctor-2.0.10.gem'
+            sha256: 7f3df92816f75344d36bb15e49a6fbc07ac0999a1cd2938fd0802ea587964aac
+        cleanup:
+          - '*'

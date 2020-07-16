@@ -1,4 +1,4 @@
-From 39d8b734a3601e567e572338fe8945fa2c70a92f Mon Sep 17 00:00:00 2001
+From c60833f851f00708e3e42582c2e8020b3119a2c8 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Mon, 28 May 2018 21:29:15 +0200
 Subject: [PATCH 3/5] Flatpak: Support KeePassXC-Browser integration
@@ -36,14 +36,61 @@ Limitations and caveats
 Note: The Native Messaging Host API would be a lot more sandbox friendly
 with the addition of D-Bus support, as an alternative to stdio.
 ---
- src/browser/BrowserSettingsWidget.cpp  | 12 ++++++++
- src/browser/BrowserShared.cpp          |  3 ++
- src/browser/NativeMessageInstaller.cpp | 36 ++++++++++++++++++++++-
- src/browser/NativeMessageInstaller.h   |  2 ++
- utils/flatpak-command-wrapper.sh       | 40 ++++++++++++++++++++++++++
- 5 files changed, 92 insertions(+), 1 deletion(-)
+ share/CMakeLists.txt                          |  7 +++-
+ .../linux/org.keepassxc.KeePassXC.desktop.in  |  4 +-
+ src/browser/BrowserSettingsWidget.cpp         | 12 ++++++
+ src/browser/BrowserShared.cpp                 |  3 ++
+ src/browser/NativeMessageInstaller.cpp        | 36 ++++++++++++++++-
+ src/browser/NativeMessageInstaller.h          |  2 +
+ utils/flatpak-command-wrapper.sh              | 40 +++++++++++++++++++
+ 7 files changed, 100 insertions(+), 4 deletions(-)
  create mode 100755 utils/flatpak-command-wrapper.sh
 
+diff --git a/share/CMakeLists.txt b/share/CMakeLists.txt
+index 43bcbb39..e80794b6 100644
+--- a/share/CMakeLists.txt
++++ b/share/CMakeLists.txt
+@@ -23,10 +23,13 @@ install(FILES ${wordlists_files} DESTINATION ${DATA_INSTALL_DIR}/wordlists)
+ file(COPY "wordlists" DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+ 
+ if(UNIX AND NOT APPLE AND NOT HAIKU)
+-    # Flatpak requires all host accessible files to use filenames based upon the app id
+     if(KEEPASSXC_DIST_FLATPAK)
++        # Use keepassxc-wrapper as workaround to run keepassxc-proxy when needed
++        set(APP_EXEC "keepassxc-wrapper")
++        # All files exported to the host must be prefixed with the reverse dns app id
+         set(APP_ICON "${ID}")
+         set(MIME_ICON "${ID}.application-x-keepassxc")
++
+         configure_file(linux/keepassxc.xml.in linux/${ID}.xml @ONLY)
+         install(FILES linux/${ID}.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/mime/packages)
+ 
+@@ -46,8 +49,10 @@ if(UNIX AND NOT APPLE AND NOT HAIKU)
+                     RENAME ${icon_name})
+         endforeach()
+     else()
++        set(APP_EXEC "keepassxc")
+         set(APP_ICON "keepassxc")
+         set(MIME_ICON "application-x-keepassxc")
++
+         configure_file(linux/keepassxc.xml.in keepassxc.xml @ONLY)
+         install(FILES linux/keepassxc.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/mime/packages)
+ 
+diff --git a/share/linux/org.keepassxc.KeePassXC.desktop.in b/share/linux/org.keepassxc.KeePassXC.desktop.in
+index ae74f43f..5adf7e18 100644
+--- a/share/linux/org.keepassxc.KeePassXC.desktop.in
++++ b/share/linux/org.keepassxc.KeePassXC.desktop.in
+@@ -8,8 +8,8 @@ GenericName[fr]=Gestionnaire de mot de passe
+ GenericName[ru]=менеджер паролей
+ Comment=Community-driven port of the Windows application “KeePass Password Safe”
+ Comment[da]=Fællesskabsdrevet port af Windows-programmet “KeePass Password Safe”
+-Exec=keepassxc %f
+-TryExec=keepassxc
++Exec=@APP_EXEC@ %f
++TryExec=@APP_EXEC@
+ Icon=@APP_ICON@
+ StartupWMClass=keepassxc
+ StartupNotify=true
 diff --git a/src/browser/BrowserSettingsWidget.cpp b/src/browser/BrowserSettingsWidget.cpp
 index d0bdad1f..9d6eed06 100644
 --- a/src/browser/BrowserSettingsWidget.cpp

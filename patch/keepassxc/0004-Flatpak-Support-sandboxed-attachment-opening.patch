@@ -1,4 +1,4 @@
-From 8c2f231a56b61d518af72a8650dc11021ce78f58 Mon Sep 17 00:00:00 2001
+From a2f05d2f8b97636457ed17a1e1c39e30edcfef5b Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Fri, 22 Mar 2019 17:02:22 +0100
 Subject: [PATCH 4/5] Flatpak: Support sandboxed attachment opening

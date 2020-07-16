@@ -19,8 +19,9 @@ finish-args:
   - --talk-name=org.gnome.SessionManager
   - --talk-name=org.gnome.SessionManager.Presence
   - --talk-name=com.canonical.Unity.Session
-    # System Tray Icon
+    # System Tray Icon (Test every at major update)
   - --talk-name=org.kde.StatusNotifierWatcher
+  - --own-name=org.kde.StatusNotifierItem-3-2 # Especially test this
     # Favicon Download
   - --share=network
     # YubiKey USB access

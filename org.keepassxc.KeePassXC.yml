@@ -127,6 +127,8 @@ modules:
               - autoreconf --install
           - type: patch
             path: patch/libykpers-1/0001-Add-configure-option-to-disable-documentation.patch
+          - type: patch
+            path: patch/libykpers-1/0002-make-header-declarations-extern.patch
         post-install:
           - install -Dm644 -t /app/share/licenses/libykpers-1 COPYING
         cleanup:

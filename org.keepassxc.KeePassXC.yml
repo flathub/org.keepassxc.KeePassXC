@@ -182,8 +182,8 @@ modules:
         sources:
           - type: git
             url: 'https://github.com/stachenov/quazip.git'
-            tag: v0.8.1
-            commit: 4df6c7412e5d123192f9cc937fb5829f8e9b1afc
+            tag: v0.9.1
+            commit: 6938d8b108b09ebb14ef25542abd2d9108f8e036
         post-install:
           - install -Dm644 -t /app/share/licenses/libquazip COPYING
 

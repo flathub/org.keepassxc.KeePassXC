@@ -1,7 +1,7 @@
-From c60833f851f00708e3e42582c2e8020b3119a2c8 Mon Sep 17 00:00:00 2001
+From 0b8adf1297f9ec39c8c372bc6ab300a5e129217d Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
-Date: Mon, 28 May 2018 21:29:15 +0200
-Subject: [PATCH 3/5] Flatpak: Support KeePassXC-Browser integration
+Date: Wed, 2 Sep 2020 17:07:12 +0200
+Subject: [PATCH 3/4] Flatpak: Support KeePassXC-Browser integration
 
 Flatpak browser integration and near feature parity with non-sandboxed
 distribution types. This is primarily made possible by:
@@ -36,61 +36,14 @@ Limitations and caveats
 Note: The Native Messaging Host API would be a lot more sandbox friendly
 with the addition of D-Bus support, as an alternative to stdio.
 ---
- share/CMakeLists.txt                          |  7 +++-
- .../linux/org.keepassxc.KeePassXC.desktop.in  |  4 +-
- src/browser/BrowserSettingsWidget.cpp         | 12 ++++++
- src/browser/BrowserShared.cpp                 |  3 ++
- src/browser/NativeMessageInstaller.cpp        | 36 ++++++++++++++++-
- src/browser/NativeMessageInstaller.h          |  2 +
- utils/flatpak-command-wrapper.sh              | 40 +++++++++++++++++++
- 7 files changed, 100 insertions(+), 4 deletions(-)
+ src/browser/BrowserSettingsWidget.cpp  | 12 ++++++++
+ src/browser/BrowserShared.cpp          |  3 ++
+ src/browser/NativeMessageInstaller.cpp | 34 +++++++++++++++++++++-
+ src/browser/NativeMessageInstaller.h   |  2 ++
+ utils/flatpak-command-wrapper.sh       | 40 ++++++++++++++++++++++++++
+ 5 files changed, 90 insertions(+), 1 deletion(-)
  create mode 100755 utils/flatpak-command-wrapper.sh
 
-diff --git a/share/CMakeLists.txt b/share/CMakeLists.txt
-index 43bcbb39..e80794b6 100644
---- a/share/CMakeLists.txt
-+++ b/share/CMakeLists.txt
-@@ -23,10 +23,13 @@ install(FILES ${wordlists_files} DESTINATION ${DATA_INSTALL_DIR}/wordlists)
- file(COPY "wordlists" DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
- 
- if(UNIX AND NOT APPLE AND NOT HAIKU)
--    # Flatpak requires all host accessible files to use filenames based upon the app id
-     if(KEEPASSXC_DIST_FLATPAK)
-+        # Use keepassxc-wrapper as workaround to run keepassxc-proxy when needed
-+        set(APP_EXEC "keepassxc-wrapper")
-+        # All files exported to the host must be prefixed with the reverse dns app id
-         set(APP_ICON "${ID}")
-         set(MIME_ICON "${ID}.application-x-keepassxc")
-+
-         configure_file(linux/keepassxc.xml.in linux/${ID}.xml @ONLY)
-         install(FILES linux/${ID}.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/mime/packages)
- 
-@@ -46,8 +49,10 @@ if(UNIX AND NOT APPLE AND NOT HAIKU)
-                     RENAME ${icon_name})
-         endforeach()
-     else()
-+        set(APP_EXEC "keepassxc")
-         set(APP_ICON "keepassxc")
-         set(MIME_ICON "application-x-keepassxc")
-+
-         configure_file(linux/keepassxc.xml.in keepassxc.xml @ONLY)
-         install(FILES linux/keepassxc.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/mime/packages)
- 
-diff --git a/share/linux/org.keepassxc.KeePassXC.desktop.in b/share/linux/org.keepassxc.KeePassXC.desktop.in
-index ae74f43f..5adf7e18 100644
---- a/share/linux/org.keepassxc.KeePassXC.desktop.in
-+++ b/share/linux/org.keepassxc.KeePassXC.desktop.in
-@@ -8,8 +8,8 @@ GenericName[fr]=Gestionnaire de mot de passe
- GenericName[ru]=менеджер паролей
- Comment=Community-driven port of the Windows application “KeePass Password Safe”
- Comment[da]=Fællesskabsdrevet port af Windows-programmet “KeePass Password Safe”
--Exec=keepassxc %f
--TryExec=keepassxc
-+Exec=@APP_EXEC@ %f
-+TryExec=@APP_EXEC@
- Icon=@APP_ICON@
- StartupWMClass=keepassxc
- StartupNotify=true
 diff --git a/src/browser/BrowserSettingsWidget.cpp b/src/browser/BrowserSettingsWidget.cpp
 index d0bdad1f..9d6eed06 100644
 --- a/src/browser/BrowserSettingsWidget.cpp
@@ -129,7 +82,7 @@ index 08b9fe53..5d95b9c6 100644
          // Use XDG_RUNTIME_DIR instead of /tmp if it's available
          QString path = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
 diff --git a/src/browser/NativeMessageInstaller.cpp b/src/browser/NativeMessageInstaller.cpp
-index 8b038f61..dc71a3aa 100644
+index 8b038f61..16c4b9b0 100644
 --- a/src/browser/NativeMessageInstaller.cpp
 +++ b/src/browser/NativeMessageInstaller.cpp
 @@ -30,6 +30,7 @@
@@ -152,7 +105,7 @@ index 8b038f61..dc71a3aa 100644
  #else
      path = QCoreApplication::applicationDirPath() + QStringLiteral("/keepassxc-proxy");
  #ifdef Q_OS_WIN
-@@ -259,6 +262,37 @@ QString NativeMessageInstaller::getProxyPath() const
+@@ -259,6 +262,35 @@ QString NativeMessageInstaller::getProxyPath() const
      return QDir::toNativeSeparators(path);
  }
  
@@ -164,19 +117,17 @@ index 8b038f61..dc71a3aa 100644
 +#ifdef KEEPASSXC_DIST_FLATPAK
 +QString NativeMessageInstaller::constructFlatpakPath() const
 +{
++    // Find and extract the host flatpak data directory (in /var)
 +    QString path;
-+    // Extract useful values from /.flatpak-info which contain some host data
 +    QSettings settings("/.flatpak-info",QSettings::IniFormat);
 +    settings.beginGroup("Instance");
-+    // The value of "app-path" is very similar to a functional proxy path;
-+    // they always have the correct parent directory in common.
 +    QString appPath = settings.value("app-path").toString();
 +
-+    QRegularExpression re("^((?:/[\\.\\w-]*)+)+/app(/org\\.keepassxc\\.KeePassXC).*$");
++    QRegularExpression re("^((?:/[\\.\\w-]*)+)+/app");
 +    QRegularExpressionMatch match = re.match(appPath);
 +    if (match.hasMatch()) {
 +        // Construct a proxy path that should work with all flatpak installations
-+        path = match.captured(1) + "/exports/bin" + match.captured(2);
++        path = match.captured(1) + "/exports/bin/" + "org.keepassxc.KeePassXC";
 +    } else {
 +        // Fallback to the most common and default flatpak installation path
 +        path = "/var/lib/flatpak/exports/bin/org.keepassxc.KeePassXC";
@@ -205,7 +156,7 @@ index 4c0e339e..f605287a 100644
  
 diff --git a/utils/flatpak-command-wrapper.sh b/utils/flatpak-command-wrapper.sh
 new file mode 100755
-index 00000000..5f4ec813
+index 00000000..5b6ff8e2
 --- /dev/null
 +++ b/utils/flatpak-command-wrapper.sh
 @@ -0,0 +1,40 @@
@@ -240,15 +191,15 @@ index 00000000..5f4ec813
 +# Firefox & Tor Browser
 +readonly arg2='keepassxc-browser@keepassxc.org'
 +
-+# Browser integration is enabled if kpxc_server socket exists
-+if [[ -S "${XDG_RUNTIME_DIR}/app/${appId}/org.keepassxc.KeePassXC.BrowserServer" ]]; then
++# Browser integration is enabled if unix socket exists
++if [[ -S "${XDG_RUNTIME_DIR}/app/${appId}/${appId}.BrowserServer" ]]; then
 +  if [[ "$1" =~ "${arg1}" ]] || [[ "$2" =~ "${arg2}" ]]; then
-+    keepassxc-proxy "$@" || exit 1
++    exec keepassxc-proxy "$@"
 +  fi
 +fi
 +
 +# If no arguments are matched or browser integration is off execute keepassxc
-+keepassxc "$@" || exit 0
++exec keepassxc "$@"
 -- 
-2.27.0
+2.28.0
 

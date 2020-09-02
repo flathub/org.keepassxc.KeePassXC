@@ -19,9 +19,9 @@ finish-args:
   - --talk-name=org.gnome.SessionManager
   - --talk-name=org.gnome.SessionManager.Presence
   - --talk-name=com.canonical.Unity.Session
-    # System Tray Icon (Test every at major update)
+    # System Tray Icon (Test at every major update)
   - --talk-name=org.kde.StatusNotifierWatcher
-  - --own-name=org.kde.StatusNotifierItem-3-2 # Especially test this
+  - --own-name=org.kde.StatusNotifierItem-2-2 # Especially test this
     # Favicon Download
   - --share=network
     # YubiKey USB access
@@ -67,8 +67,8 @@ modules:
       - -DWITH_XC_FDOSECRETS=OFF
     sources:
       - type: archive
-        url: 'https://github.com/keepassxreboot/keepassxc/releases/download/2.6.0/keepassxc-2.6.0-src.tar.xz'
-        sha256: d0d23d97a73ac1cbf59bfca2f5d1506ae36dfcd4fbfb4225efe19931f035fd3a
+        url: 'https://github.com/keepassxreboot/keepassxc/releases/download/2.6.1/keepassxc-2.6.1-src.tar.xz'
+        sha256: b466759947fcd71a59b8d498a1f154cb7b85b4f2a0a417c92a75845d8bac8cc8
       - type: patch
         path: patch/keepassxc/0001-Add-flatpak-distribution-type.patch
       - type: patch
@@ -77,10 +77,6 @@ modules:
         path: patch/keepassxc/0003-Flatpak-Support-KeePassXC-Browser-integration.patch
       - type: patch
         path: patch/keepassxc/0004-Flatpak-Support-sandboxed-attachment-opening.patch
-      - type: patch
-        path: patch/keepassxc/0005-Add-OARS-metadata.patch
-      - type: patch
-        path: patch/keepassxc/0006-Fix-appdata-screenshots.patch
     post-install:
       - install -Dm755 ./utils/flatpak-command-wrapper.sh /app/bin/keepassxc-wrapper
       - |

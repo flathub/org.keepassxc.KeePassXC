@@ -1,7 +1,7 @@
-From bfafa4c746878ceb42075dab1258055d60812277 Mon Sep 17 00:00:00 2001
+From c39a2cc67d6c9850a3418849b4c55602417b901b Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
-Date: Mon, 18 Mar 2019 19:17:41 +0100
-Subject: [PATCH 2/5] Support reverse-dns filenames for data files
+Date: Wed, 2 Sep 2020 14:54:18 +0200
+Subject: [PATCH 2/4] Support reverse-dns filenames for data files
 
 Flatpak isolates application files from the host, but some files must be
 exported to the host to serve their purpose (ex. desktop entries, icons
@@ -19,7 +19,7 @@ exportable filenames, without affecting other distribution types.
  5 files changed, 67 insertions(+), 11 deletions(-)
  create mode 100644 share/linux/.gitignore
  rename share/linux/{keepassxc.xml => keepassxc.xml.in} (85%)
- rename share/linux/{org.keepassxc.KeePassXC.desktop => org.keepassxc.KeePassXC.desktop.in} (97%)
+ rename share/linux/{org.keepassxc.KeePassXC.desktop => org.keepassxc.KeePassXC.desktop.in} (99%)
 
 diff --git a/share/CMakeLists.txt b/share/CMakeLists.txt
 index 6d689df9..43bcbb39 100644
@@ -104,14 +104,14 @@ index b26b4db2..15ec1118 100644
    </mime-type>
  </mime-info>
 diff --git a/share/linux/org.keepassxc.KeePassXC.desktop b/share/linux/org.keepassxc.KeePassXC.desktop.in
-similarity index 97%
+similarity index 99%
 rename from share/linux/org.keepassxc.KeePassXC.desktop
 rename to share/linux/org.keepassxc.KeePassXC.desktop.in
-index 541af3c0..ae74f43f 100644
+index 693232e9..7774c1ac 100644
 --- a/share/linux/org.keepassxc.KeePassXC.desktop
 +++ b/share/linux/org.keepassxc.KeePassXC.desktop.in
-@@ -10,7 +10,7 @@ Comment=Community-driven port of the Windows application “KeePass Password Saf
- Comment[da]=Fællesskabsdrevet port af Windows-programmet “KeePass Password Safe”
+@@ -36,7 +36,7 @@ Comment[da]=Fællesskabsdrevet port af Windows-programmet “KeePass Password Sa
+ Comment[et]=Kogukonna arendatav port Windowsi programmist KeePass Password Safe
  Exec=keepassxc %f
  TryExec=keepassxc
 -Icon=keepassxc
@@ -120,7 +120,7 @@ index 541af3c0..ae74f43f 100644
  StartupNotify=true
  Terminal=false
 diff --git a/src/core/Resources.cpp b/src/core/Resources.cpp
-index ad1ff5fa..5d7b7baf 100644
+index ae8c0d46..cd92dfe7 100644
 --- a/src/core/Resources.cpp
 +++ b/src/core/Resources.cpp
 @@ -98,7 +98,11 @@ QString Resources::wordlistPath(const QString& name) const
@@ -182,5 +182,5 @@ index ad1ff5fa..5d7b7baf 100644
  
  QIcon Resources::icon(const QString& name, bool recolor, const QColor& overrideColor)
 -- 
-2.27.0
+2.28.0
 

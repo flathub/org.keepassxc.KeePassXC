@@ -1,4 +1,4 @@
-From 0b8adf1297f9ec39c8c372bc6ab300a5e129217d Mon Sep 17 00:00:00 2001
+From a1e06e4c447fa8b9883c599e73f506aee2d53253 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Wed, 2 Sep 2020 17:07:12 +0200
 Subject: [PATCH 3/4] Flatpak: Support KeePassXC-Browser integration
@@ -68,7 +68,7 @@ index d0bdad1f..9d6eed06 100644
      const auto customBrowserSet = settings->customBrowserSupport();
      m_ui->customBrowserSupport->setChecked(customBrowserSet);
 diff --git a/src/browser/BrowserShared.cpp b/src/browser/BrowserShared.cpp
-index 08b9fe53..5d95b9c6 100644
+index 08b9fe53..87e7e689 100644
 --- a/src/browser/BrowserShared.cpp
 +++ b/src/browser/BrowserShared.cpp
 @@ -30,6 +30,9 @@ namespace BrowserShared
@@ -77,7 +77,7 @@ index 08b9fe53..5d95b9c6 100644
          return QProcessEnvironment::systemEnvironment().value("SNAP_USER_COMMON") + serverName;
 +#elif defined(KEEPASSXC_DIST_FLATPAK)
 +        return QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation)
-+            + "/app/" + QProcessEnvironment::systemEnvironment().value("FLATPAK_ID") + serverName;
++            + "/app/" + "org.keepassxc.KeePassXC" + serverName;
  #elif defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
          // Use XDG_RUNTIME_DIR instead of /tmp if it's available
          QString path = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);

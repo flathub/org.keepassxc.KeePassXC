@@ -1,30 +1,23 @@
-From 6b0e841915eadd36878a7252bb112d9fb173412b Mon Sep 17 00:00:00 2001
+From 1585dd76124b461d1eed909362afd12c92bb68d7 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Wed, 2 Sep 2020 17:07:20 +0200
 Subject: [PATCH 4/4] Flatpak: Support sandboxed attachment opening
 
 Ensure that xdg portals can open attachment files, while simultaneously
-removing one of the reasons for the non-sandboxed /tmp.
+removing the only critical need for global /tmp access.
+
 The path: $XDG_RUNTIME_DIR/app/$FLATPAK_ID is used for flatpak because
 it exists, respects XDG standards and is host accessible by default.
 
-Unfortunately the /tmp sandbox permission is still required due to the
-keepassxc lock file and unix socket which requires a common path across
-distribution types. This is unfortunate since /tmp forces a needlessly
-broad sandbox permission when KeePassXC really only needs it to be
-accessible by itself (including other instances). The document portal
-should cover the rest.
-
-- Fixes sandboxed attachment opening.
-- Preferably $XDG_RUNTIME_DIR should be used when available.
-- Using /tmp needlessly weakens the sandbox.
-- This is more consistent with how things are handled with snaps.
+- Fix attachment opening from a flatpak style sandbox
+- Respect $XDG_RUNTIME_DIR when available
+- Remove need for needlessly exposing the host /tmp
 ---
  src/gui/entry/EntryAttachmentsWidget.cpp | 8 +++++++-
  1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/src/gui/entry/EntryAttachmentsWidget.cpp b/src/gui/entry/EntryAttachmentsWidget.cpp
-index 836c8ef2..51578784 100644
+index 836c8ef2..f2740903 100644
 --- a/src/gui/entry/EntryAttachmentsWidget.cpp
 +++ b/src/gui/entry/EntryAttachmentsWidget.cpp
 @@ -1,5 +1,6 @@
@@ -46,7 +39,7 @@ index 836c8ef2..51578784 100644
 +#elif defined(KEEPASSXC_DIST_FLATPAK)
 +    const QString tmpFileTemplate =
 +        QString("%1/app/%2/XXXXXX.%3").arg(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation),
-+                QProcessEnvironment::systemEnvironment().value("FLATPAK_ID"), filename);
++                "org.keepassxc.KeePassXC", filename);
  #else
      const QString tmpFileTemplate = QDir::temp().absoluteFilePath(QString("XXXXXX.").append(filename));
  #endif

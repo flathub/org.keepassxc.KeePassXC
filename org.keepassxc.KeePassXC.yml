@@ -77,6 +77,8 @@ modules:
         path: patch/keepassxc/0003-Flatpak-Support-KeePassXC-Browser-integration.patch
       - type: patch
         path: patch/keepassxc/0004-Flatpak-Support-sandboxed-attachment-opening.patch
+      - type: patch
+        path: patch/keepassxc/0005-Support-quazip-1.patch
     post-install:
       - install -Dm755 ./utils/flatpak-command-wrapper.sh /app/bin/keepassxc-wrapper
       - |
@@ -180,8 +182,8 @@ modules:
         sources:
           - type: git
             url: 'https://github.com/stachenov/quazip.git'
-            tag: v0.9.1
-            commit: 6938d8b108b09ebb14ef25542abd2d9108f8e036
+            tag: v1.1
+            commit: 100578f686b7da029a19c0bc9ad3c93f80adb2bb
         post-install:
           - install -Dm644 -t /app/share/licenses/libquazip COPYING
 

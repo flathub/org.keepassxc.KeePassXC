@@ -67,8 +67,8 @@ modules:
       - -DWITH_XC_FDOSECRETS=OFF
     sources:
       - type: archive
-        url: 'https://github.com/keepassxreboot/keepassxc/releases/download/2.6.1/keepassxc-2.6.1-src.tar.xz'
-        sha256: b466759947fcd71a59b8d498a1f154cb7b85b4f2a0a417c92a75845d8bac8cc8
+        url: 'https://github.com/keepassxreboot/keepassxc/releases/download/2.6.2/keepassxc-2.6.2-src.tar.xz'
+        sha256: 101bfade0a760d6ec6b8c4f3556e7f1201f1edd29ceabc73ad5846f9a57d7e38
       - type: patch
         path: patch/keepassxc/0001-Add-flatpak-distribution-type.patch
       - type: patch

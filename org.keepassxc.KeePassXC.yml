@@ -166,8 +166,8 @@ modules:
           - -DBUILD_SHARED_LIBS=YES
         sources:
           - type: archive
-            url: 'https://fukuchi.org/works/qrencode/qrencode-4.1.0.tar.gz'
-            sha512: 125a3165397f7e66abcdbd0904d6222eac9b2461dffa75da02a53ba27b7ee09c3a7ca23b4f2d4ebab44d599051bca8c9e7668d3f0e607b08cfd2e3fc10f9cfe3
+            url: 'https://fukuchi.org/works/qrencode/qrencode-4.1.1.tar.gz'
+            sha512: 209bb656ae3f391b03c7b3ceb03e34f7320b0105babf48b619e7a299528b8828449e0e7696f0b5db0d99170a81709d0518e34835229a748701e7df784e58a9ce
         post-install:
           - install -Dm644 -t /app/share/licenses/libqrencode COPYING
         cleanup:

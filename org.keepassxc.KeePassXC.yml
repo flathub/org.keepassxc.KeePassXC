@@ -21,7 +21,8 @@ finish-args:
   - --talk-name=com.canonical.Unity.Session
     # System Tray Icon (Test at every major update)
   - --talk-name=org.kde.StatusNotifierWatcher
-  - --own-name=org.kde.StatusNotifierItem-2-2 # Especially test this
+  - --own-name=org.kde.StatusNotifierItem-2-2 # Especially test these
+  - --own-name=org.kde.StatusNotifierItem-3-2
     # Favicon Download
   - --share=network
     # YubiKey USB access

@@ -41,6 +41,10 @@ finish-args:
     # Host access: workaround extensive portal issues
     # (use beta branch for testing of portals based file access)
   - --filesystem=host
+    # Network filesystems
+  - --filesystem=xdg-run/gvfs
+  - --talk-name=org.gtk.vfs
+  - --talk-name=org.gtk.vfs.*
 cleanup:
   - '*.a'
   - '*.h'

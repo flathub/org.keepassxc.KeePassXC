@@ -9,6 +9,7 @@ finish-args:
   - --socket=x11
     # Wayland access
   - --socket=wayland
+  - --env=QT_QPA_PLATFORM=xcb
     # Notification access
   - --talk-name=org.freedesktop.Notifications
     # Screen Lock Listener

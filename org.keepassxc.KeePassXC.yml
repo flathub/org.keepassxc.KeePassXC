@@ -67,8 +67,8 @@ modules:
       - -DWITH_XC_FDOSECRETS=OFF
     sources:
       - type: archive
-        url: 'https://github.com/keepassxreboot/keepassxc/releases/download/2.6.1/keepassxc-2.6.1-src.tar.xz'
-        sha256: b466759947fcd71a59b8d498a1f154cb7b85b4f2a0a417c92a75845d8bac8cc8
+        url: 'https://github.com/keepassxreboot/keepassxc/releases/download/2.6.2/keepassxc-2.6.2-src.tar.xz'
+        sha256: 101bfade0a760d6ec6b8c4f3556e7f1201f1edd29ceabc73ad5846f9a57d7e38
       - type: patch
         path: patch/keepassxc/0001-Add-flatpak-distribution-type.patch
       - type: patch
@@ -77,6 +77,8 @@ modules:
         path: patch/keepassxc/0003-Flatpak-Support-KeePassXC-Browser-integration.patch
       - type: patch
         path: patch/keepassxc/0004-Flatpak-Support-sandboxed-attachment-opening.patch
+      - type: patch
+        path: patch/keepassxc/0005-Support-quazip-1.patch
     post-install:
       - install -Dm755 ./utils/flatpak-command-wrapper.sh /app/bin/keepassxc-wrapper
       - |
@@ -166,8 +168,8 @@ modules:
           - -DBUILD_SHARED_LIBS=YES
         sources:
           - type: archive
-            url: 'https://fukuchi.org/works/qrencode/qrencode-4.1.0.tar.gz'
-            sha512: 125a3165397f7e66abcdbd0904d6222eac9b2461dffa75da02a53ba27b7ee09c3a7ca23b4f2d4ebab44d599051bca8c9e7668d3f0e607b08cfd2e3fc10f9cfe3
+            url: 'https://fukuchi.org/works/qrencode/qrencode-4.1.1.tar.gz'
+            sha512: 209bb656ae3f391b03c7b3ceb03e34f7320b0105babf48b619e7a299528b8828449e0e7696f0b5db0d99170a81709d0518e34835229a748701e7df784e58a9ce
         post-install:
           - install -Dm644 -t /app/share/licenses/libqrencode COPYING
         cleanup:
@@ -180,8 +182,8 @@ modules:
         sources:
           - type: git
             url: 'https://github.com/stachenov/quazip.git'
-            tag: v0.9.1
-            commit: 6938d8b108b09ebb14ef25542abd2d9108f8e036
+            tag: v1.1
+            commit: 100578f686b7da029a19c0bc9ad3c93f80adb2bb
         post-install:
           - install -Dm644 -t /app/share/licenses/libquazip COPYING
 

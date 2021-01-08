@@ -29,13 +29,6 @@ finish-args:
   - --device=all
     # Access to temporary files (Remove if RuntimeDirectory patch is upstreamed)
   - --filesystem=/tmp
-    # KeePassXC-Browser Extension
-  - --filesystem=xdg-config/google-chrome/NativeMessagingHosts:create
-  - --filesystem=xdg-config/chromium/NativeMessagingHosts:create
-  - --filesystem=~/.mozilla/native-messaging-hosts:create
-  - --filesystem=xdg-config/vivaldi/NativeMessagingHosts:create
-  - --filesystem=~/.tor-browser/app/Browser/TorBrowser/Data/Browser/.mozilla/native-messaging-hosts:create
-  - --filesystem=xdg-config/BraveSoftware/Brave-Browser/NativeMessagingHosts:create
     # SSH Agent access
   - --socket=ssh-auth
     # Host access: workaround extensive portal issues

@@ -1,4 +1,4 @@
-From de147c5c996eab1d142b1a69889a7d66b0fe50c3 Mon Sep 17 00:00:00 2001
+From f0f9e8e9a35e88de3f91c48a40350a114f3cdc33 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Wed, 2 Sep 2020 14:31:05 +0200
 Subject: [PATCH 1/4] Add flatpak distribution type
@@ -13,7 +13,7 @@ is properly displayed as the distribution type in the app debug tab.
  2 files changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d390f672..a1d17d77 100644
+index 55cecbe7..d15ca281 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -17,6 +17,7 @@
@@ -52,5 +52,5 @@ index 6aceaa2a..9cc7426b 100644
  #cmakedefine HAVE_PR_SET_DUMPABLE 1
  #cmakedefine HAVE_RLIMIT_CORE 1
 -- 
-2.28.0
+2.30.0
 

@@ -1,4 +1,4 @@
-From a1e06e4c447fa8b9883c599e73f506aee2d53253 Mon Sep 17 00:00:00 2001
+From 6070fc75c6f7a17dfc53831cbc638f4c56b3e8a4 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Wed, 2 Sep 2020 17:07:12 +0200
 Subject: [PATCH 3/4] Flatpak: Support KeePassXC-Browser integration
@@ -68,7 +68,7 @@ index d0bdad1f..9d6eed06 100644
      const auto customBrowserSet = settings->customBrowserSupport();
      m_ui->customBrowserSupport->setChecked(customBrowserSet);
 diff --git a/src/browser/BrowserShared.cpp b/src/browser/BrowserShared.cpp
-index 08b9fe53..87e7e689 100644
+index 69d0db49..52101b1a 100644
 --- a/src/browser/BrowserShared.cpp
 +++ b/src/browser/BrowserShared.cpp
 @@ -30,6 +30,9 @@ namespace BrowserShared
@@ -201,5 +201,5 @@ index 00000000..5b6ff8e2
 +# If no arguments are matched or browser integration is off execute keepassxc
 +exec keepassxc "$@"
 -- 
-2.28.0
+2.30.0
 

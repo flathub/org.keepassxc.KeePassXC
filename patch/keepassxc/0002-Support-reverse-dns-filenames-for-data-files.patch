@@ -1,4 +1,4 @@
-From c39a2cc67d6c9850a3418849b4c55602417b901b Mon Sep 17 00:00:00 2001
+From 49ae7785675b079f7908b1ce447585ec2a93771a Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Wed, 2 Sep 2020 14:54:18 +0200
 Subject: [PATCH 2/4] Support reverse-dns filenames for data files
@@ -15,14 +15,14 @@ exportable filenames, without affecting other distribution types.
  share/linux/.gitignore                        |  3 ++
  .../linux/{keepassxc.xml => keepassxc.xml.in} |  2 +-
  ...top => org.keepassxc.KeePassXC.desktop.in} |  2 +-
- src/core/Resources.cpp                        | 24 ++++++++++
- 5 files changed, 67 insertions(+), 11 deletions(-)
+ src/core/Resources.cpp                        | 10 ++++
+ 5 files changed, 53 insertions(+), 11 deletions(-)
  create mode 100644 share/linux/.gitignore
  rename share/linux/{keepassxc.xml => keepassxc.xml.in} (85%)
  rename share/linux/{org.keepassxc.KeePassXC.desktop => org.keepassxc.KeePassXC.desktop.in} (99%)
 
 diff --git a/share/CMakeLists.txt b/share/CMakeLists.txt
-index 6d689df9..43bcbb39 100644
+index 6d689df9..b069e4a4 100644
 --- a/share/CMakeLists.txt
 +++ b/share/CMakeLists.txt
 @@ -23,15 +23,44 @@ install(FILES ${wordlists_files} DESTINATION ${DATA_INSTALL_DIR}/wordlists)
@@ -41,7 +41,7 @@ index 6d689df9..43bcbb39 100644
 +    # Flatpak requires all host accessible files to use filenames based upon the app id
 +    if(KEEPASSXC_DIST_FLATPAK)
 +        set(APP_ICON "${ID}")
-+        set(MIME_ICON "${ID}.application-x-keepassxc")
++        set(MIME_ICON "${ID}-application-x-keepassxc")
 +        configure_file(linux/keepassxc.xml.in linux/${ID}.xml @ONLY)
 +        install(FILES linux/${ID}.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/mime/packages)
 +
@@ -53,8 +53,8 @@ index 6d689df9..43bcbb39 100644
 +            get_filename_component(icon_dir ${icon_match} DIRECTORY)
 +            # Prefix all icons with application id: "org.keepassxc.KeePassXC"
 +            string(REGEX REPLACE "^keepassxc(.*)?(\\.png|\\.svg)$" "${ID}\\1\\2" icon_name ${icon_name})
-+            string(REGEX REPLACE "^(application-x-keepassxc\\.svg)$" "${ID}.\\1" icon_name ${icon_name})
-+            string(REGEX REPLACE "^(${ID})-(.*)$" "\\1.\\2" icon_name ${icon_name})
++            string(REGEX REPLACE "^(application-x-keepassxc\\.svg)$" "${ID}-\\1" icon_name ${icon_name})
++	    #string(REGEX REPLACE "^(${ID})-(.*)$" "\\1.\\2" icon_name ${icon_name})
 +            # Find icon sub dir ex. "scalable/mimetypes/"
 +            file(RELATIVE_PATH icon_subdir ${CMAKE_CURRENT_SOURCE_DIR}/icons/application ${icon_dir})
 +            install(FILES ${icon_match} DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/${icon_subdir}
@@ -120,10 +120,10 @@ index 693232e9..7774c1ac 100644
  StartupNotify=true
  Terminal=false
 diff --git a/src/core/Resources.cpp b/src/core/Resources.cpp
-index ae8c0d46..cd92dfe7 100644
+index df89a4f9..b5708462 100644
 --- a/src/core/Resources.cpp
 +++ b/src/core/Resources.cpp
-@@ -98,7 +98,11 @@ QString Resources::wordlistPath(const QString& name) const
+@@ -111,7 +111,11 @@ QString Resources::wordlistPath(const QString& name) const
  
  QIcon Resources::applicationIcon()
  {
@@ -135,52 +135,27 @@ index ae8c0d46..cd92dfe7 100644
  }
  
  QString Resources::trayIconAppearance() const
-@@ -124,12 +128,22 @@ QIcon Resources::trayIconLocked()
+@@ -138,7 +142,11 @@ QIcon Resources::trayIcon(QString style)
+ 
      auto iconApperance = trayIconAppearance();
- 
-     if (iconApperance == "monochrome-light") {
+     if (!iconApperance.startsWith("monochrome")) {
 +#ifdef KEEPASSXC_DIST_FLATPAK
-+        return icon("org.keepassxc.KeePassXC.monochrome-light-locked", false);
++        return icon(QString("org.keepassxc.KeePassXC%1").arg(style), false);
 +#else
-         return icon("keepassxc-monochrome-light-locked", false);
+         return icon(QString("keepassxc%1").arg(style), false);
 +#endif
      }
-     if (iconApperance == "monochrome-dark") {
-+#ifdef KEEPASSXC_DIST_FLATPAK
-+        return icon("org.keepassxc.KeePassXC.monochrome-dark-locked", false);
-+    }
-+    return icon("org.keepassxc.KeePassXC.locked", false);
-+#else
-         return icon("keepassxc-monochrome-dark-locked", false);
-     }
-     return icon("keepassxc-locked", false);
-+#endif
- }
  
- QIcon Resources::trayIconUnlocked()
-@@ -137,12 +151,22 @@ QIcon Resources::trayIconUnlocked()
-     auto iconApperance = trayIconAppearance();
- 
-     if (iconApperance == "monochrome-light") {
-+#ifdef KEEPASSXC_DIST_FLATPAK
-+        return icon("org.keepassxc.KeePassXC.monochrome-light", false);
-+#else
-         return icon("keepassxc-monochrome-light", false);
-+#endif
+     QIcon i;
+@@ -148,6 +156,8 @@ QIcon Resources::trayIcon(QString style)
+     } else {
+         i = icon(QString("keepassxc-monochrome-dark%1").arg(style), false);
      }
-     if (iconApperance == "monochrome-dark") {
-+#ifdef KEEPASSXC_DIST_FLATPAK
-+        return icon("org.keepassxc.KeePassXC.monochrome-dark", false);
-+    }
-+    return icon("org.keepassxc.KeePassXC", false);
-+#else
-         return icon("keepassxc-monochrome-dark", false);
-     }
-     return icon("keepassxc", false);
-+#endif
- }
- 
- QIcon Resources::icon(const QString& name, bool recolor, const QColor& overrideColor)
++#elif defined(KEEPASSXC_DIST_FLATPAK)
++    i = icon(QString("org.keepassxc.KeePassXC-%1%2").arg(iconApperance, style), false);
+ #else
+     i = icon(QString("keepassxc-%1%2").arg(iconApperance, style), false);
+ #endif
 -- 
-2.28.0
+2.30.0
 

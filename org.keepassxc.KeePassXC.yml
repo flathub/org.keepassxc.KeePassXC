@@ -29,7 +29,7 @@ finish-args:
     # YubiKey USB access
   - --device=all
     # Access to temporary files (Remove if RuntimeDirectory patch is upstreamed)
-  - --filesystem=/tmp
+  # - --filesystem=/tmp
     # SSH Agent access
   - --socket=ssh-auth
     # Host access: workaround extensive portal issues
@@ -66,8 +66,8 @@ modules:
       - -DWITH_XC_FDOSECRETS=OFF
     sources:
       - type: archive
-        url: 'https://github.com/keepassxreboot/keepassxc/releases/download/2.6.6/keepassxc-2.6.6-src.tar.xz'
-        sha256: 3603b11ac39b289c47fac77fa150e05fd64b393d8cfdf5732dc3ef106650a4e2
+        url: 'https://github.com/keepassxreboot/keepassxc/releases/download/2.7.0/keepassxc-2.7.0-src.tar.xz'
+        sha256: 83be76890904cd6703343fa097d68bcfdd99bb525cf518fa62a7df9293026aa7
       - type: patch
         path: patch/keepassxc/0001-Add-flatpak-distribution-type.patch
       - type: patch
@@ -179,8 +179,8 @@ modules:
         sources:
           - type: git
             url: 'https://github.com/stachenov/quazip.git'
-            tag: v1.1
-            commit: 100578f686b7da029a19c0bc9ad3c93f80adb2bb
+            tag: v1.2
+            commit: b6d1cecbe9f5ff760d4964e9fc77f1b06b75e045
         post-install:
           - install -Dm644 -t /app/share/licenses/libquazip COPYING
 
@@ -193,6 +193,6 @@ modules:
         sources:
           - type: file
             url: 'https://rubygems.org/downloads/asciidoctor-2.0.10.gem'
-            sha256: 7f3df92816f75344d36bb15e49a6fbc07ac0999a1cd2938fd0802ea587964aac
+            sha256: ed5b5e399e8d64994cc16f0983f993d6e33990909a8415b6fc8b786cdeb00f3d
         cleanup:
           - '*'

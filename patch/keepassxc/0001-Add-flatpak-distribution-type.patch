@@ -1,4 +1,4 @@
-From f0f9e8e9a35e88de3f91c48a40350a114f3cdc33 Mon Sep 17 00:00:00 2001
+From 4c8d026e91597117d94d8756effb2d4ca6b6a9f7 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Wed, 2 Sep 2020 14:31:05 +0200
 Subject: [PATCH 1/4] Add flatpak distribution type
@@ -13,7 +13,7 @@ is properly displayed as the distribution type in the app debug tab.
  2 files changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 55cecbe7..d15ca281 100644
+index baa399de..27932db1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -17,6 +17,7 @@
@@ -24,7 +24,7 @@ index 55cecbe7..d15ca281 100644
  
  if(NOT CMAKE_BUILD_TYPE)
      set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING
-@@ -167,11 +168,13 @@ message(STATUS "Setting up build for KeePassXC v${KEEPASSXC_VERSION}\n")
+@@ -158,11 +159,13 @@ message(STATUS "Setting up build for KeePassXC v${KEEPASSXC_VERSION}\n")
  # Distribution info
  set(KEEPASSXC_DIST ON)
  set(KEEPASSXC_DIST_TYPE "Other" CACHE STRING "KeePassXC Distribution Type")
@@ -40,10 +40,10 @@ index 55cecbe7..d15ca281 100644
      unset(KEEPASSXC_DIST)
  endif()
 diff --git a/src/config-keepassx.h.cmake b/src/config-keepassx.h.cmake
-index 6aceaa2a..9cc7426b 100644
+index 6b855c62..6caa89d8 100644
 --- a/src/config-keepassx.h.cmake
 +++ b/src/config-keepassx.h.cmake
-@@ -33,6 +33,7 @@
+@@ -31,6 +31,7 @@
  #cmakedefine KEEPASSXC_DIST_TYPE "@KEEPASSXC_DIST_TYPE@"
  #cmakedefine KEEPASSXC_DIST_SNAP
  #cmakedefine KEEPASSXC_DIST_APPIMAGE
@@ -52,5 +52,5 @@ index 6aceaa2a..9cc7426b 100644
  #cmakedefine HAVE_PR_SET_DUMPABLE 1
  #cmakedefine HAVE_RLIMIT_CORE 1
 -- 
-2.30.0
+2.35.1
 

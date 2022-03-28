@@ -1,4 +1,4 @@
-From 6070fc75c6f7a17dfc53831cbc638f4c56b3e8a4 Mon Sep 17 00:00:00 2001
+From 9d80a4237dca0ca1e682468467639db78c466298 Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Wed, 2 Sep 2020 17:07:12 +0200
 Subject: [PATCH 3/4] Flatpak: Support KeePassXC-Browser integration
@@ -45,10 +45,10 @@ with the addition of D-Bus support, as an alternative to stdio.
  create mode 100755 utils/flatpak-command-wrapper.sh
 
 diff --git a/src/browser/BrowserSettingsWidget.cpp b/src/browser/BrowserSettingsWidget.cpp
-index d0bdad1f..9d6eed06 100644
+index d0f81615..8dd26d32 100644
 --- a/src/browser/BrowserSettingsWidget.cpp
 +++ b/src/browser/BrowserSettingsWidget.cpp
-@@ -171,6 +171,18 @@ void BrowserSettingsWidget::loadSettings()
+@@ -158,6 +158,18 @@ void BrowserSettingsWidget::loadSettings()
      m_ui->browserGlobalWarningWidget->setCloseButtonVisible(false);
      m_ui->browserGlobalWarningWidget->setAutoHideTimeout(-1);
  #endif
@@ -68,10 +68,10 @@ index d0bdad1f..9d6eed06 100644
      const auto customBrowserSet = settings->customBrowserSupport();
      m_ui->customBrowserSupport->setChecked(customBrowserSet);
 diff --git a/src/browser/BrowserShared.cpp b/src/browser/BrowserShared.cpp
-index 69d0db49..52101b1a 100644
+index 22a50781..97a1228a 100644
 --- a/src/browser/BrowserShared.cpp
 +++ b/src/browser/BrowserShared.cpp
-@@ -30,6 +30,9 @@ namespace BrowserShared
+@@ -31,6 +31,9 @@ namespace BrowserShared
          const auto serverName = QStringLiteral("/org.keepassxc.KeePassXC.BrowserServer");
  #if defined(KEEPASSXC_DIST_SNAP)
          return QProcessEnvironment::systemEnvironment().value("SNAP_USER_COMMON") + serverName;
@@ -82,7 +82,7 @@ index 69d0db49..52101b1a 100644
          // Use XDG_RUNTIME_DIR instead of /tmp if it's available
          QString path = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
 diff --git a/src/browser/NativeMessageInstaller.cpp b/src/browser/NativeMessageInstaller.cpp
-index 8b038f61..16c4b9b0 100644
+index dbf6b9b3..1a183805 100644
 --- a/src/browser/NativeMessageInstaller.cpp
 +++ b/src/browser/NativeMessageInstaller.cpp
 @@ -30,6 +30,7 @@
@@ -142,10 +142,10 @@ index 8b038f61..16c4b9b0 100644
   * Constructs the JSON script file used with native messaging
   *
 diff --git a/src/browser/NativeMessageInstaller.h b/src/browser/NativeMessageInstaller.h
-index 4c0e339e..f605287a 100644
+index 256dd0c8..0823d6bc 100644
 --- a/src/browser/NativeMessageInstaller.h
 +++ b/src/browser/NativeMessageInstaller.h
-@@ -40,6 +40,8 @@ private:
+@@ -42,6 +42,8 @@ private:
      QJsonObject constructFile(BrowserShared::SupportedBrowsers browser);
      bool createNativeMessageFile(BrowserShared::SupportedBrowsers browser);
  
@@ -201,5 +201,5 @@ index 00000000..5b6ff8e2
 +# If no arguments are matched or browser integration is off execute keepassxc
 +exec keepassxc "$@"
 -- 
-2.30.0
+2.35.1
 

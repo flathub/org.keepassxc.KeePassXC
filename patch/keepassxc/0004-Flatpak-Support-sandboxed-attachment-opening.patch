@@ -1,6 +1,6 @@
-From 3e8137d54a7ffdb108faa2112a6d8a8a5a08ae86 Mon Sep 17 00:00:00 2001
+From 43563b4321bdad77527c6fe3b0c44103cac3153d Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
-Date: Wed, 2 Sep 2020 17:07:20 +0200
+Date: Sun, 27 Mar 2022 14:44:41 +0200
 Subject: [PATCH 4/4] Flatpak: Support sandboxed attachment opening
 
 Ensure that xdg portals can open attachment files, while simultaneously
@@ -13,36 +13,36 @@ it exists, respects XDG standards and is host accessible by default.
 - Respect $XDG_RUNTIME_DIR when available
 - Remove need for needlessly exposing the host /tmp
 ---
- src/gui/entry/EntryAttachmentsWidget.cpp | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ src/core/EntryAttachments.cpp | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/src/gui/entry/EntryAttachmentsWidget.cpp b/src/gui/entry/EntryAttachmentsWidget.cpp
-index 836c8ef2..f2740903 100644
---- a/src/gui/entry/EntryAttachmentsWidget.cpp
-+++ b/src/gui/entry/EntryAttachmentsWidget.cpp
-@@ -1,5 +1,6 @@
- #include "EntryAttachmentsWidget.h"
- #include "ui_EntryAttachmentsWidget.h"
+diff --git a/src/core/EntryAttachments.cpp b/src/core/EntryAttachments.cpp
+index eeeb6fb2..90a5ac57 100644
+--- a/src/core/EntryAttachments.cpp
++++ b/src/core/EntryAttachments.cpp
+@@ -17,6 +17,7 @@
+ 
+ #include "EntryAttachments.h"
+ 
 +#include "config-keepassx.h"
+ #include "core/Global.h"
+ #include "crypto/Random.h"
  
- #include <QDesktopServices>
- #include <QDir>
-@@ -333,9 +334,14 @@ bool EntryAttachmentsWidget::openAttachment(const QModelIndex& index, QString& e
-     const QByteArray attachmentData = m_entryAttachments->value(filename);
+@@ -218,9 +219,13 @@ bool EntryAttachments::openAttachment(const QString& key, QString* errorMessage)
+         const QByteArray attachmentData = value(key);
+         auto ext = key.contains(".") ? "." + key.split(".").last() : "";
  
-     // tmp file will be removed once the database (or the application) has been closed
 -#ifdef KEEPASSXC_DIST_SNAP
-+
 +#if defined(KEEPASSXC_DIST_SNAP)
-     const QString tmpFileTemplate =
-         QString("%1/XXXXXX.%2").arg(QProcessEnvironment::systemEnvironment().value("SNAP_USER_DATA"), filename);
+         const QString tmpFileTemplate =
+             QString("%1/XXXXXXXXXXXX%2").arg(QProcessEnvironment::systemEnvironment().value("SNAP_USER_DATA"), ext);
 +#elif defined(KEEPASSXC_DIST_FLATPAK)
-+    const QString tmpFileTemplate =
-+        QString("%1/app/%2/XXXXXX.%3").arg(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation),
-+                "org.keepassxc.KeePassXC", filename);
++        const QString tmpFileTemplate =
++            QString("%1/app/%2/XXXXXXXXXXXX%3").arg(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation),
++                "org.keepassxc.KeePassXC", ext);
  #else
-     const QString tmpFileTemplate = QDir::temp().absoluteFilePath(QString("XXXXXX.").append(filename));
+         const QString tmpFileTemplate = QDir::temp().absoluteFilePath(QString("XXXXXXXXXXXX").append(ext));
  #endif
 -- 
-2.30.0
+2.35.1
 

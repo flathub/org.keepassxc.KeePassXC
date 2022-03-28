@@ -1,4 +1,4 @@
-From 49ae7785675b079f7908b1ce447585ec2a93771a Mon Sep 17 00:00:00 2001
+From 19d1c1d9e998979d8402e4c2cf7910149bb6bf5c Mon Sep 17 00:00:00 2001
 From: AsavarTzeth <asavartzeth@gmail.com>
 Date: Wed, 2 Sep 2020 14:54:18 +0200
 Subject: [PATCH 2/4] Support reverse-dns filenames for data files
@@ -15,7 +15,7 @@ exportable filenames, without affecting other distribution types.
  share/linux/.gitignore                        |  3 ++
  .../linux/{keepassxc.xml => keepassxc.xml.in} |  2 +-
  ...top => org.keepassxc.KeePassXC.desktop.in} |  2 +-
- src/core/Resources.cpp                        | 10 ++++
+ src/gui/Icons.cpp                             | 10 ++++
  5 files changed, 53 insertions(+), 11 deletions(-)
  create mode 100644 share/linux/.gitignore
  rename share/linux/{keepassxc.xml => keepassxc.xml.in} (85%)
@@ -107,11 +107,11 @@ diff --git a/share/linux/org.keepassxc.KeePassXC.desktop b/share/linux/org.keepa
 similarity index 99%
 rename from share/linux/org.keepassxc.KeePassXC.desktop
 rename to share/linux/org.keepassxc.KeePassXC.desktop.in
-index 693232e9..7774c1ac 100644
+index e8d4dccf..5b7779b4 100644
 --- a/share/linux/org.keepassxc.KeePassXC.desktop
 +++ b/share/linux/org.keepassxc.KeePassXC.desktop.in
-@@ -36,7 +36,7 @@ Comment[da]=Fællesskabsdrevet port af Windows-programmet “KeePass Password Sa
- Comment[et]=Kogukonna arendatav port Windowsi programmist KeePass Password Safe
+@@ -37,7 +37,7 @@ Comment[et]=Kogukonna arendatav port Windowsi programmist KeePass Password Safe
+ Comment[ru]=Разработанный сообществом порт Windows-приложения KeePass Password Safe
  Exec=keepassxc %f
  TryExec=keepassxc
 -Icon=keepassxc
@@ -119,13 +119,13 @@ index 693232e9..7774c1ac 100644
  StartupWMClass=keepassxc
  StartupNotify=true
  Terminal=false
-diff --git a/src/core/Resources.cpp b/src/core/Resources.cpp
-index df89a4f9..b5708462 100644
---- a/src/core/Resources.cpp
-+++ b/src/core/Resources.cpp
-@@ -111,7 +111,11 @@ QString Resources::wordlistPath(const QString& name) const
+diff --git a/src/gui/Icons.cpp b/src/gui/Icons.cpp
+index 0809e271..73da3487 100644
+--- a/src/gui/Icons.cpp
++++ b/src/gui/Icons.cpp
+@@ -54,7 +54,11 @@ Icons::Icons()
  
- QIcon Resources::applicationIcon()
+ QIcon Icons::applicationIcon()
  {
 +#ifdef KEEPASSXC_DIST_FLATPAK
 +    return icon("org.keepassxc.KeePassXC", false);
@@ -134,20 +134,20 @@ index df89a4f9..b5708462 100644
 +#endif
  }
  
- QString Resources::trayIconAppearance() const
-@@ -138,7 +142,11 @@ QIcon Resources::trayIcon(QString style)
+ QString Icons::trayIconAppearance() const
+@@ -81,7 +85,11 @@ QIcon Icons::trayIcon(QString style)
  
      auto iconApperance = trayIconAppearance();
      if (!iconApperance.startsWith("monochrome")) {
 +#ifdef KEEPASSXC_DIST_FLATPAK
-+        return icon(QString("org.keepassxc.KeePassXC%1").arg(style), false);
++	return icon(QString("org.keepassxc.KeePassXC%1").arg(style), false);
 +#else
          return icon(QString("keepassxc%1").arg(style), false);
 +#endif
      }
  
      QIcon i;
-@@ -148,6 +156,8 @@ QIcon Resources::trayIcon(QString style)
+@@ -91,6 +99,8 @@ QIcon Icons::trayIcon(QString style)
      } else {
          i = icon(QString("keepassxc-monochrome-dark%1").arg(style), false);
      }
@@ -157,5 +157,5 @@ index df89a4f9..b5708462 100644
      i = icon(QString("keepassxc-%1%2").arg(iconApperance, style), false);
  #endif
 -- 
-2.30.0
+2.35.1
 

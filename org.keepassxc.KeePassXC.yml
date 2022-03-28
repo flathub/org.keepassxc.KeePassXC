@@ -189,10 +189,10 @@ modules:
         build-commands:
           - gem install --ignore-dependencies --no-user-install --verbose --local
                         --install-dir /app/lib/ruby/gems/2.6.0 --bindir /app/bin
-                        asciidoctor-2.0.10.gem
+                        asciidoctor-2.0.17.gem
         sources:
           - type: file
-            url: 'https://rubygems.org/downloads/asciidoctor-2.0.10.gem'
+            url: 'https://rubygems.org/downloads/asciidoctor-2.0.17.gem'
             sha256: ed5b5e399e8d64994cc16f0983f993d6e33990909a8415b6fc8b786cdeb00f3d
         cleanup:
           - '*'

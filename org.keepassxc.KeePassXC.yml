@@ -61,6 +61,7 @@ modules:
       - -DCMAKE_BUILD_TYPE=Release
       - -DKEEPASSXC_DIST_TYPE=Flatpak
       - -DKEEPASSXC_BUILD_TYPE=Release
+      - -DWITH_TESTS=OFF
       - -DCMAKE_INSTALL_LIBDIR=lib
       - -DWITH_XC_UPDATECHECK=OFF
       - -DWITH_XC_AUTOTYPE=ON

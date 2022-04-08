@@ -1,6 +1,6 @@
 id: org.keepassxc.KeePassXC
 runtime: org.kde.Platform
-runtime-version: '5.13'
+runtime-version: '5.15-21.08'
 sdk: org.kde.Sdk
 command: keepassxc-wrapper
 finish-args:
@@ -19,23 +19,26 @@ finish-args:
   - --talk-name=org.gnome.SessionManager
   - --talk-name=org.gnome.SessionManager.Presence
   - --talk-name=com.canonical.Unity.Session
-    # System Tray Icon
+    # System Tray Icon (Test at every major update)
   - --talk-name=org.kde.StatusNotifierWatcher
+  - --own-name=org.kde.StatusNotifierItem-2-1 # Especially test these
+  - --own-name=org.kde.StatusNotifierItem-2-2
+  - --own-name=org.kde.StatusNotifierItem-3-2
     # Favicon Download
   - --share=network
     # YubiKey USB access
   - --device=all
     # Access to temporary files (Remove if RuntimeDirectory patch is upstreamed)
   - --filesystem=/tmp
-    # KeePassXC-Browser Extension
-  - --filesystem=xdg-config/google-chrome/NativeMessagingHosts:create
-  - --filesystem=xdg-config/chromium/NativeMessagingHosts:create
-  - --filesystem=~/.mozilla/native-messaging-hosts:create
-  - --filesystem=xdg-config/vivaldi/NativeMessagingHosts:create
-  - --filesystem=~/.tor-browser/app/Browser/TorBrowser/Data/Browser/.mozilla/native-messaging-hosts:create
-  - --filesystem=xdg-config/BraveSoftware/Brave-Browser/NativeMessagingHosts:create
     # SSH Agent access
   - --socket=ssh-auth
+    # Host access: workaround extensive portal issues
+    # (use beta branch for testing of portals based file access)
+  - --filesystem=host
+    # Network filesystems
+  - --filesystem=xdg-run/gvfs
+  - --talk-name=org.gtk.vfs
+  - --talk-name=org.gtk.vfs.*
 cleanup:
   - '*.a'
   - '*.h'
@@ -44,7 +47,10 @@ cleanup:
   - /lib/pkgconfig
 modules:
   - name: keepassxc
-    buildsystem: cmake-ninja
+    buildsystem: cmake
+    build-options:
+      env:
+        GEM_PATH: /app/lib/ruby/gems/2.6.0
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
       - -DKEEPASSXC_DIST_TYPE=Flatpak
@@ -60,18 +66,16 @@ modules:
       - -DWITH_XC_FDOSECRETS=OFF
     sources:
       - type: archive
-        url: 'https://github.com/keepassxreboot/keepassxc/releases/download/2.5.2/keepassxc-2.5.2-src.tar.xz'
-        sha256: 12951ca58b615202d73e44602bf5332f2dea3b7f959955fd3eed7cdfed607c53
+        url: 'https://github.com/keepassxreboot/keepassxc/releases/download/2.6.6/keepassxc-2.6.6-src.tar.xz'
+        sha256: 3603b11ac39b289c47fac77fa150e05fd64b393d8cfdf5732dc3ef106650a4e2
       - type: patch
         path: patch/keepassxc/0001-Add-flatpak-distribution-type.patch
       - type: patch
         path: patch/keepassxc/0002-Support-reverse-dns-filenames-for-data-files.patch
       - type: patch
-        path: patch/keepassxc/0003-Support-KeePassXC-Browser-Flatpak-environments.patch
+        path: patch/keepassxc/0003-Flatpak-Support-KeePassXC-Browser-integration.patch
       - type: patch
-        path: patch/keepassxc/0004-Use-RuntimeDirectory-for-opening-attachments.patch
-      - type: patch
-        path: patch/keepassxc/0005-Add-OARS-metadata.patch
+        path: patch/keepassxc/0004-Flatpak-Support-sandboxed-attachment-opening.patch
     post-install:
       - install -Dm755 ./utils/flatpak-command-wrapper.sh /app/bin/keepassxc-wrapper
       - |
@@ -83,18 +87,7 @@ modules:
 
     modules:
 
-      - name: libusb
-        config-opts:
-          - --disable-static
-          - --disable-udev
-          - --prefix=/app
-        sources:
-          - type: git
-            url: 'https://github.com/libusb/libusb.git'
-            tag: v1.0.23
-            commit: e782eeb2514266f6738e242cdcb18e3ae1ed06fa
-        post-install:
-          - install -Dm644 -t /app/share/licenses/libusb COPYING
+      - shared-modules/libusb/libusb.json
 
       - name: libyubikey
         config-opts:
@@ -129,6 +122,8 @@ modules:
               - autoreconf --install
           - type: patch
             path: patch/libykpers-1/0001-Add-configure-option-to-disable-documentation.patch
+          - type: patch
+            path: patch/libykpers-1/0002-make-header-declarations-extern.patch
         post-install:
           - install -Dm644 -t /app/share/licenses/libykpers-1 COPYING
         cleanup:
@@ -170,8 +165,8 @@ modules:
           - -DBUILD_SHARED_LIBS=YES
         sources:
           - type: archive
-            url: 'https://fukuchi.org/works/qrencode/qrencode-4.0.2.tar.gz'
-            sha512: c3e3834574ec059a4b571427b29d6f5f26bd806fd7498b9bba778f4eceab6ebe5733eef0f3c4f6af91eb3f2e9310f93f6d7b337c28e85c72db7e59bd79be77a9
+            url: 'https://fukuchi.org/works/qrencode/qrencode-4.1.1.tar.gz'
+            sha512: 209bb656ae3f391b03c7b3ceb03e34f7320b0105babf48b619e7a299528b8828449e0e7696f0b5db0d99170a81709d0518e34835229a748701e7df784e58a9ce
         post-install:
           - install -Dm644 -t /app/share/licenses/libqrencode COPYING
         cleanup:
@@ -184,9 +179,20 @@ modules:
         sources:
           - type: git
             url: 'https://github.com/stachenov/quazip.git'
-            tag: 0.7.6
-            commit: 243a411091d7610be930a10ad225c5ae85415079
-          - type: patch
-            path: patch/quazip/0001-Fix-cmake-module-install-path.patch
+            tag: v1.1
+            commit: 100578f686b7da029a19c0bc9ad3c93f80adb2bb
         post-install:
           - install -Dm644 -t /app/share/licenses/libquazip COPYING
+
+      - name: asciidoctor
+        buildsystem: simple
+        build-commands:
+          - gem install --ignore-dependencies --no-user-install --verbose --local
+                        --install-dir /app/lib/ruby/gems/2.6.0 --bindir /app/bin
+                        asciidoctor-2.0.10.gem
+        sources:
+          - type: file
+            url: 'https://rubygems.org/downloads/asciidoctor-2.0.10.gem'
+            sha256: 7f3df92816f75344d36bb15e49a6fbc07ac0999a1cd2938fd0802ea587964aac
+        cleanup:
+          - '*'

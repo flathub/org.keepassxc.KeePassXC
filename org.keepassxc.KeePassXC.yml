@@ -28,13 +28,19 @@ finish-args:
   - --share=network
     # YubiKey USB access
   - --device=all
-    # Access to temporary files (Remove if RuntimeDirectory patch is upstreamed)
-  - --filesystem=/tmp
     # SSH Agent access
   - --socket=ssh-auth
     # Host access: workaround extensive portal issues
     # (use beta branch for testing of portals based file access)
   - --filesystem=host
+    # Access to temporary files (Remove if RuntimeDirectory patch is upstreamed)
+  - --filesystem=/tmp
+    # Required for native messaging (Tor browser)
+    # TODO uncomment when host access is no longer required.
+    # - --filesystem=xdg-data
+    # Required for native messaging (Non-Firefox)
+    # TODO uncomment when host access is no longer required.
+    # - --filesystem=xdg-config
     # Network filesystems
   - --filesystem=xdg-run/gvfs
   - --talk-name=org.gtk.vfs
@@ -50,11 +56,12 @@ modules:
     buildsystem: cmake
     build-options:
       env:
-        GEM_PATH: /app/lib/ruby/gems/2.6.0
+        GEM_PATH: /app/lib/ruby/gems/2.7.1
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
       - -DKEEPASSXC_DIST_TYPE=Flatpak
       - -DKEEPASSXC_BUILD_TYPE=Release
+      - -DWITH_TESTS=OFF
       - -DCMAKE_INSTALL_LIBDIR=lib
       - -DWITH_XC_UPDATECHECK=OFF
       - -DWITH_XC_AUTOTYPE=ON
@@ -66,18 +73,10 @@ modules:
       - -DWITH_XC_FDOSECRETS=OFF
     sources:
       - type: archive
-        url: 'https://github.com/keepassxreboot/keepassxc/releases/download/2.6.6/keepassxc-2.6.6-src.tar.xz'
-        sha256: 3603b11ac39b289c47fac77fa150e05fd64b393d8cfdf5732dc3ef106650a4e2
-      - type: patch
-        path: patch/keepassxc/0001-Add-flatpak-distribution-type.patch
-      - type: patch
-        path: patch/keepassxc/0002-Support-reverse-dns-filenames-for-data-files.patch
-      - type: patch
-        path: patch/keepassxc/0003-Flatpak-Support-KeePassXC-Browser-integration.patch
-      - type: patch
-        path: patch/keepassxc/0004-Flatpak-Support-sandboxed-attachment-opening.patch
+        url: https://github.com/keepassxreboot/keepassxc/releases/download/2.7.1/keepassxc-2.7.1-src.tar.xz
+        sha256: 6001ba626c35c316dbda6de35736f012a2264f95139fcb4a094b8eb49b15d3e7
     post-install:
-      - install -Dm755 ./utils/flatpak-command-wrapper.sh /app/bin/keepassxc-wrapper
+      - install -Dm755 ./utils/keepassxc-flatpak-wrapper.sh /app/bin/keepassxc-wrapper
       - |
         for f in COPYING LICENSE*; do
           install -Dm644 $f /app/share/licenses/org.keepassxc.KeePassXC/$f
@@ -89,54 +88,17 @@ modules:
 
       - shared-modules/libusb/libusb.json
 
-      - name: libyubikey
-        config-opts:
-          - --disable-documentation
+      - name: minizip
+        subdir: contrib/minizip
         sources:
-          - type: git
-            url: 'https://github.com/Yubico/yubico-c.git'
-            tag: libyubikey-1.13
-            commit: 0b4f3909416a5a5c4d5bbf5104682218fe3c7218
+          - type: archive
+            url: https://zlib.net/zlib-1.2.12.tar.gz
+            sha256: 91844808532e5ce316b3c010929493c0244f3d37593afd6de04f71821d5136d9
           - type: script
+            dest: contrib/minizip/
             dest-filename: autogen.sh
             commands:
-              - autoreconf --install
-          - type: patch
-            path: patch/yubikey-c/0001-Add-configure-option-to-disable-documentation.patch
-        post-install:
-          - install -Dm644 -t /app/share/licenses/libyubikey COPYING
-        cleanup:
-          - /bin
-
-      - name: libykpers-1
-        config-opts:
-          - --disable-documentation
-        sources:
-          - type: git
-            url: 'https://github.com/Yubico/yubikey-personalization.git'
-            tag: v1.20.0
-            commit: 8dfad10ecea2ddf6e099b8c5e5392c5964821eaa
-          - type: script
-            dest-filename: autogen.sh
-            commands:
-              - autoreconf --install
-          - type: patch
-            path: patch/libykpers-1/0001-Add-configure-option-to-disable-documentation.patch
-          - type: patch
-            path: patch/libykpers-1/0002-make-header-declarations-extern.patch
-        post-install:
-          - install -Dm644 -t /app/share/licenses/libykpers-1 COPYING
-        cleanup:
-          - /bin
-
-      - name: libsodium
-        sources:
-          - type: git
-            url: 'https://github.com/jedisct1/libsodium.git'
-            tag: 1.0.18-RELEASE
-            commit: 940ef42797baa0278df6b7fd9e67c7590f87744b
-        post-install:
-          - install -Dm644 -t /app/share/licenses/libsodium LICENSE
+              - autoreconf -ifv
 
       - name: libargon2
         no-autogen: true
@@ -172,23 +134,43 @@ modules:
         cleanup:
           - /share/man
 
-      - name: libquazip
-        buildsystem: cmake-ninja
-        config-opts:
-          - -DCMAKE_CXX_FLAGS=$CFLAGS -fPIC
+      - name: botan
+        buildsystem: simple
+        build-commands:
+          - "python3 ./configure.py \
+              --disable-cc-tests \
+              --disable-static-library \
+              --prefix=/app \
+              --with-openssl \
+              --with-zlib \
+              --without-documentation"
+          - make -j${FLATPAK_BUILDER_N_JOBS}
+          - make install
         sources:
           - type: git
-            url: 'https://github.com/stachenov/quazip.git'
-            tag: v1.1
-            commit: 100578f686b7da029a19c0bc9ad3c93f80adb2bb
+            url: https://github.com/randombit/botan.git
+            tag: 2.19.1
+            commit: fe62c1f5ce6c4379a52bd018c2ff68bed3024c4d
         post-install:
-          - install -Dm644 -t /app/share/licenses/libquazip COPYING
+          - install -Dm644 -t /app/share/licenses/botan license.txt
+
+      - name: pcsclite
+        config-opts:
+          - --sbindir=/app/bin
+        sources:
+          - type: archive
+            url: https://github.com/LudovicRousseau/PCSC/archive/1.9.5/PCSC-1.9.5.tar.gz
+            sha256: 4c8cd8fa86004fd3c2fe252f2505d607f1752133d2ff1841f7e8b54fb94b4f73
+        cleanup:
+          - /bin
+        post-install:
+          - install -Dm644 -t /app/share/licenses/pcsclite COPYING
 
       - name: asciidoctor
         buildsystem: simple
         build-commands:
           - gem install --ignore-dependencies --no-user-install --verbose --local
-                        --install-dir /app/lib/ruby/gems/2.6.0 --bindir /app/bin
+                        --install-dir /app/lib/ruby/gems/2.7.1 --bindir /app/bin
                         asciidoctor-2.0.10.gem
         sources:
           - type: file

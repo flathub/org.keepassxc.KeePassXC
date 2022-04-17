@@ -70,9 +70,10 @@ modules:
       - -DWITH_XC_KEESHARE=ON
       - -DWITH_XC_FDOSECRETS=OFF
     sources:
-      - type: archive
-        url: https://github.com/keepassxreboot/keepassxc/releases/download/2.7.1/keepassxc-2.7.1-src.tar.xz
-        sha256: 6001ba626c35c316dbda6de35736f012a2264f95139fcb4a094b8eb49b15d3e7
+      - type: git
+        url: https://github.com/keepassxreboot/keepassxc.git
+        branch: unlock-ssh-key
+        commit: 63730d4ba5eec97077c1dad01eb6fd15977998bf
     post-install:
       - install -Dm755 ./utils/keepassxc-flatpak-wrapper.sh /app/bin/keepassxc-wrapper
       - |

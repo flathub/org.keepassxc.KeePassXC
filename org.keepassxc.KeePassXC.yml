@@ -43,8 +43,6 @@ finish-args:
     # - --filesystem=xdg-config
     # Network filesystems
   - --filesystem=xdg-run/gvfs
-  - --talk-name=org.gtk.vfs
-  - --talk-name=org.gtk.vfs.*
 cleanup:
   - '*.a'
   - '*.h'

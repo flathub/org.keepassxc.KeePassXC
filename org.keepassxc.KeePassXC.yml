@@ -73,7 +73,7 @@ modules:
       - type: git
         url: https://github.com/keepassxreboot/keepassxc.git
         branch: unlock-ssh-key
-        commit: 63730d4ba5eec97077c1dad01eb6fd15977998bf
+        commit: 6f694c8e07b3c8147fcaa68596d5e385fde4b839
     post-install:
       - install -Dm755 ./utils/keepassxc-flatpak-wrapper.sh /app/bin/keepassxc-wrapper
       - |

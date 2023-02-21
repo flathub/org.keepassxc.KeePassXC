@@ -21,6 +21,8 @@ finish-args:
   - --talk-name=com.canonical.Unity.Session
     # System Tray Icon (Test at every major update)
   - --talk-name=org.kde.StatusNotifierWatcher
+    # Secret Service
+  - --own-name=org.freedesktop.secrets
     # Favicon Download
   - --share=network
     # YubiKey USB access
@@ -65,7 +67,7 @@ modules:
       - -DWITH_XC_YUBIKEY=ON
       - -DWITH_XC_SSHAGENT=ON
       - -DWITH_XC_KEESHARE=ON
-      - -DWITH_XC_FDOSECRETS=OFF
+      - -DWITH_XC_FDOSECRETS=ON
     sources:
       - type: git
         url: https://github.com/keepassxreboot/keepassxc.git

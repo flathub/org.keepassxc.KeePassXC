@@ -13,8 +13,7 @@ finish-args:
   - --talk-name=org.freedesktop.Notifications
     # Screen Lock Listener
   - --talk-name=org.freedesktop.ScreenSaver
-  - --talk-name=org.freedesktop.login1.Manager
-  - --talk-name=org.freedesktop.login1.Session
+  - --system-talk-name=org.freedesktop.login1
   - --talk-name=org.gnome.ScreenSaver
   - --talk-name=org.gnome.SessionManager
   - --talk-name=org.gnome.SessionManager.Presence

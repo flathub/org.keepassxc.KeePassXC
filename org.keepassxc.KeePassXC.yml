@@ -139,7 +139,6 @@ modules:
               --disable-cc-tests \
               --disable-static-library \
               --prefix=/app \
-              --with-openssl \
               --with-zlib \
               --without-documentation"
           - make -j${FLATPAK_BUILDER_N_JOBS}
@@ -147,8 +146,8 @@ modules:
         sources:
           - type: git
             url: https://github.com/randombit/botan.git
-            tag: 3.0.0
-            commit: 51b06ca93d1998d19927699f78b8d67539148dde
+            tag: 2.19.3
+            commit: 15dc32f12d05e99a267f0fc47d88b678b71b8b05
         post-install:
           - install -Dm644 -t /app/share/licenses/botan license.txt
 

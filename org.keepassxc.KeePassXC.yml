@@ -70,10 +70,9 @@ modules:
     sources:
       - type: git
         url: https://github.com/keepassxreboot/keepassxc.git
-        tag: 2.7.4
-        commit: 63b2394ed0598aea6b0f5ad16430ac93256c21bb
+        tag: 2.7.5
+        commit: 9d0537bdab70c49b6e0f551e1cda30e01b3d413a
       - type: patch
-        path: org.keepassxc.KeePassXC.appdata.xml.patch
     post-install:
       - install -Dm755 ./utils/keepassxc-flatpak-wrapper.sh /app/bin/keepassxc-wrapper
       - |
@@ -149,8 +148,8 @@ modules:
         sources:
           - type: git
             url: https://github.com/randombit/botan.git
-            tag: 2.19.1
-            commit: fe62c1f5ce6c4379a52bd018c2ff68bed3024c4d
+            tag: 3.0.0
+            commit: 51b06ca93d1998d19927699f78b8d67539148dde
         post-install:
           - install -Dm644 -t /app/share/licenses/botan license.txt
 

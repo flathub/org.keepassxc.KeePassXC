@@ -70,8 +70,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/keepassxreboot/keepassxc.git
-        tag: 2.7.4
-        commit: 63b2394ed0598aea6b0f5ad16430ac93256c21bb
+        tag: 2.7.5
+        commit: 9d0537bdab70c49b6e0f551e1cda30e01b3d413a
       - type: patch
         path: org.keepassxc.KeePassXC.appdata.xml.patch
     post-install:
@@ -141,7 +141,6 @@ modules:
               --disable-cc-tests \
               --disable-static-library \
               --prefix=/app \
-              --with-openssl \
               --with-zlib \
               --without-documentation"
           - make -j${FLATPAK_BUILDER_N_JOBS}
@@ -149,8 +148,8 @@ modules:
         sources:
           - type: git
             url: https://github.com/randombit/botan.git
-            tag: 2.19.1
-            commit: fe62c1f5ce6c4379a52bd018c2ff68bed3024c4d
+            tag: 2.19.3
+            commit: 15dc32f12d05e99a267f0fc47d88b678b71b8b05
         post-install:
           - install -Dm644 -t /app/share/licenses/botan license.txt
 

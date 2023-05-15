@@ -1,0 +1,33 @@
+diff --git a/share/linux/org.keepassxc.KeePassXC.appdata.xml b/share/linux/org.keepassxc.KeePassXC.appdata.xml
+index 0f0b194..66010ac 100644
+--- a/share/linux/org.keepassxc.KeePassXC.appdata.xml
++++ b/share/linux/org.keepassxc.KeePassXC.appdata.xml
+@@ -37,23 +37,19 @@
+ 
+     <screenshots>
+         <screenshot type="default">
+-            <image>https://keepassxc.org/images/screenshots/thumbs/welcome_screen.png</image>
+-            <caption>Create, Import or Open Databases</caption>
+-        </screenshot>
+-        <screenshot>
+-            <image>https://keepassxc.org/images/screenshots/thumbs/database_view.png</image>
++            <image>https://keepassxc.org/assets/img/screenshots/database_view.png</image>
+             <caption>Organize with Groups and Entries</caption>
+         </screenshot>
+         <screenshot>
+-            <image>https://keepassxc.org/images/screenshots/thumbs/edit_entry.png</image>
+-            <caption>Database Entry</caption>
++            <image>https://keepassxc.org/assets/img/screenshots/unlock_database.png</image>
++            <caption>Unlock database</caption>
+         </screenshot>
+         <screenshot>
+-            <image>https://keepassxc.org/images/screenshots/thumbs/edit_entry_icons.png</image>
++            <image>https://keepassxc.org/assets/img/screenshots/edit_entry_icons.png</image>
+             <caption>Icon Selection for Entry</caption>
+         </screenshot>
+         <screenshot>
+-            <image>https://keepassxc.org/images/screenshots/thumbs/password_generator_advanced.png</image>
++            <image>https://keepassxc.org/assets/img/screenshots/password_generator_advanced.png</image>
+             <caption>Password Generator</caption>
+         </screenshot>
+     </screenshots>

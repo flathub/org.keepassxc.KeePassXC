@@ -70,10 +70,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/keepassxreboot/keepassxc.git
-        tag: 2.7.5
-        commit: 9d0537bdab70c49b6e0f551e1cda30e01b3d413a
-      - type: patch
-        path: org.keepassxc.KeePassXC.appdata.xml.patch
+        tag: 2.7.6
+        commit: dd21defcf38e06e6aa4286fe85bfbb399b1e36e9
     post-install:
       - install -Dm755 ./utils/keepassxc-flatpak-wrapper.sh /app/bin/keepassxc-wrapper
       - |
@@ -159,8 +157,8 @@ modules:
         sources:
           - type: git
             url: https://github.com/LudovicRousseau/PCSC
-            tag: 1.9.9
-            commit: 15c16c7796607b1c8a2ce253d3f536918ab26b4a
+            tag: 2.0.0
+            commit: 549922c1355fdd1e85eb0a952fefda7bb96e286a
         cleanup:
           - /bin
         post-install:
@@ -171,10 +169,10 @@ modules:
         build-commands:
           - gem install --ignore-dependencies --no-user-install --verbose --local
                         --install-dir /app/lib/ruby/gems/2.7.1 --bindir /app/bin
-                        asciidoctor-2.0.10.gem
+                        asciidoctor-2.0.20.gem
         sources:
           - type: file
-            url: 'https://rubygems.org/downloads/asciidoctor-2.0.10.gem'
-            sha256: 7f3df92816f75344d36bb15e49a6fbc07ac0999a1cd2938fd0802ea587964aac
+            url: https://rubygems.org/downloads/asciidoctor-2.0.20.gem
+            sha256: 835eabd445e4ae88f56a5f4e07593c3612b2be72eb661c612c3a8e1e17c57479
         cleanup:
           - '*'

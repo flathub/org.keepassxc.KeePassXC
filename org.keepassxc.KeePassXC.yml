@@ -30,7 +30,14 @@ finish-args:
   - --socket=ssh-auth
     # Host access: workaround extensive portal issues
     # (use beta branch for testing of portals based file access)
-  - --filesystem=host
+  - --filesystem=home
+  - --filesystem=/media
+  - --filesystem=/mnt
+  - --filesystem=/run/media
+  - --filesystem=/var/run/media
+  - --filesystem=/var/mnt
+    # for accessing hardware keys
+  - --filesystem=/dev
     # Access to temporary files (Remove if RuntimeDirectory patch is upstreamed)
   - --filesystem=/tmp
     # Required for native messaging (Tor browser)

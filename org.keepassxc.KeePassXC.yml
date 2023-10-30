@@ -132,8 +132,8 @@ modules:
         sources:
           - type: git
             url: https://github.com/randombit/botan.git
-            tag: 2.19.3
-            commit: 15dc32f12d05e99a267f0fc47d88b678b71b8b05
+            tag: 3.2.0
+            commit: 6f466a2704a31856ebc27451ca861527d3dd00a1
         post-install:
           - install -Dm644 -t /app/share/licenses/botan license.txt
 

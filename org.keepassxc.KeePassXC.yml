@@ -47,6 +47,8 @@ cleanup:
   - '*.la'
   - /include
   - /lib/pkgconfig
+  - /share/doc
+  - /share/man
 modules:
   - name: keepassxc
     buildsystem: cmake-ninja

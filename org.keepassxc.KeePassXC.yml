@@ -1,6 +1,6 @@
 id: org.keepassxc.KeePassXC
 runtime: org.kde.Platform
-runtime-version: '5.15-22.08'
+runtime-version: '5.15-23.08'
 sdk: org.kde.Sdk
 command: keepassxc-wrapper
 finish-args:
@@ -47,9 +47,11 @@ cleanup:
   - '*.la'
   - /include
   - /lib/pkgconfig
+  - /share/doc
+  - /share/man
 modules:
   - name: keepassxc
-    buildsystem: cmake
+    buildsystem: cmake-ninja
     build-options:
       env:
         GEM_PATH: /app/lib/ruby/gems/2.7.1
@@ -90,8 +92,8 @@ modules:
         sources:
           - type: git
             url: 'https://github.com/madler/zlib'
-            tag: 'v1.2.13'
-            commit: 04f42ceca40f73e2978b50e93806c2a18c1281fc
+            tag: 'v1.3'
+            commit: 09155eaa2f9270dc4ed1fa13e2b4b2613e6e4851
           - type: script
             dest: contrib/minizip/
             dest-filename: autogen.sh
@@ -118,20 +120,6 @@ modules:
         cleanup:
           - /bin
 
-      - name: libqrencode
-        buildsystem: cmake-ninja
-        config-opts:
-          - -DWITH_TOOLS=NO
-          - -DBUILD_SHARED_LIBS=YES
-        sources:
-          - type: archive
-            url: 'https://github.com/fukuchi/libqrencode/archive/refs/tags/v4.1.1.tar.gz'
-            sha256: 5385bc1b8c2f20f3b91d258bf8ccc8cf62023935df2d2676b5b67049f31a049c
-        post-install:
-          - install -Dm644 -t /app/share/licenses/libqrencode COPYING
-        cleanup:
-          - /share/man
-
       - name: botan
         buildsystem: simple
         build-commands:
@@ -146,8 +134,8 @@ modules:
         sources:
           - type: git
             url: https://github.com/randombit/botan.git
-            tag: 2.19.3
-            commit: 15dc32f12d05e99a267f0fc47d88b678b71b8b05
+            tag: 3.2.0
+            commit: 6f466a2704a31856ebc27451ca861527d3dd00a1
         post-install:
           - install -Dm644 -t /app/share/licenses/botan license.txt
 

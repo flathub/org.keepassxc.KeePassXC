@@ -28,6 +28,7 @@ finish-args:
   - --device=all
     # SSH Agent access
   - --socket=ssh-auth
+  - --env=SSH_AUTH_SOCK=$SSH_AUTH_SOCK
     # Host access: workaround extensive portal issues
     # (use beta branch for testing of portals based file access)
   - --filesystem=host
@@ -62,18 +63,12 @@ modules:
       - -DWITH_TESTS=OFF
       - -DCMAKE_INSTALL_LIBDIR=lib
       - -DWITH_XC_UPDATECHECK=OFF
-      - -DWITH_XC_AUTOTYPE=ON
-      - -DWITH_XC_NETWORKING=ON
-      - -DWITH_XC_BROWSER=ON
-      - -DWITH_XC_YUBIKEY=ON
-      - -DWITH_XC_SSHAGENT=ON
-      - -DWITH_XC_KEESHARE=ON
-      - -DWITH_XC_FDOSECRETS=ON
+      - -DWITH_XC_ALL=ON
     sources:
       - type: git
         url: https://github.com/keepassxreboot/keepassxc.git
-        tag: 2.7.6
-        commit: dd21defcf38e06e6aa4286fe85bfbb399b1e36e9
+        tag: 2.7.7
+        commit: 68e2dd8d22fdef79c72ad5902e026c698e2ff087
     post-install:
       - install -Dm755 ./utils/keepassxc-flatpak-wrapper.sh /app/bin/keepassxc-wrapper
       - |
@@ -134,8 +129,8 @@ modules:
         sources:
           - type: git
             url: https://github.com/randombit/botan.git
-            tag: 3.2.0
-            commit: 6f466a2704a31856ebc27451ca861527d3dd00a1
+            tag: 3.3.0
+            commit: 9074b04c1303a24e2084f8325fa570a5ad4f2478
         post-install:
           - install -Dm644 -t /app/share/licenses/botan license.txt
 
@@ -157,10 +152,10 @@ modules:
         build-commands:
           - gem install --ignore-dependencies --no-user-install --verbose --local
                         --install-dir /app/lib/ruby/gems/2.7.1 --bindir /app/bin
-                        asciidoctor-2.0.20.gem
+                        asciidoctor-2.0.22.gem
         sources:
           - type: file
-            url: https://rubygems.org/downloads/asciidoctor-2.0.20.gem
-            sha256: 835eabd445e4ae88f56a5f4e07593c3612b2be72eb661c612c3a8e1e17c57479
+            url: https://rubygems.org/downloads/asciidoctor-2.0.22.gem
+            sha256: a6d8f1bb593a3617c0334fdf36b1e25186c4f4d0e15636538c5811de9bb1cad6
         cleanup:
           - '*'

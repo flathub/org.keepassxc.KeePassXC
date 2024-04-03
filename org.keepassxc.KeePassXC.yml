@@ -26,6 +26,8 @@ finish-args:
   - --share=network
     # YubiKey USB access
   - --device=all
+    # Nitrokey Smartcard access
+  - --socket=pcsc
     # SSH Agent access
   - --socket=ssh-auth
   - --env=SSH_AUTH_SOCK=$SSH_AUTH_SOCK

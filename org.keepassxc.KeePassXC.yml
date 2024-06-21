@@ -69,10 +69,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/keepassxreboot/keepassxc.git
-        tag: 2.7.8
-        commit: f6757d35aded625318e34ec745583604c814b7c3
-      - type: patch
-        path: remove-config-guards.patch
+        tag: 2.7.9
+        commit: 8f6dd13b0add1dd3fb666cc43ae1e5db478b1827
     post-install:
       - install -Dm755 ./utils/keepassxc-flatpak-wrapper.sh /app/bin/keepassxc-wrapper
       - |

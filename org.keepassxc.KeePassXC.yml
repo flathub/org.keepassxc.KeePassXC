@@ -122,7 +122,6 @@ modules:
             x-checker-data:
               type: git
               tag-pattern: ^(\d+)$
-              
         post-install:
           - install -Dm644 -t /app/share/licenses/libargon2 LICENSE
         cleanup:

@@ -24,7 +24,7 @@ finish-args:
   - --own-name=org.freedesktop.secrets
     # Favicon Download
   - --share=network
-    # YubiKey USB access
+    # YubiKey USB access4258
   - --device=all
     # Nitrokey Smartcard access
   - --socket=pcsc
@@ -71,6 +71,9 @@ modules:
         url: https://github.com/keepassxreboot/keepassxc.git
         tag: 2.7.9
         commit: 8f6dd13b0add1dd3fb666cc43ae1e5db478b1827
+        x-checker-data:
+          type: git
+          tag-pattern: ^(\d+[\.\d]+)$
     post-install:
       - install -Dm755 ./utils/keepassxc-flatpak-wrapper.sh /app/bin/keepassxc-wrapper
       - |
@@ -89,8 +92,12 @@ modules:
         sources:
           - type: git
             url: 'https://github.com/madler/zlib'
-            tag: 'v1.3'
-            commit: 09155eaa2f9270dc4ed1fa13e2b4b2613e6e4851
+            tag: 'v1.3.1'
+            commit: 51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf
+            x-checker-data:
+              type: git
+              tag-pattern: ^v(\d+[\.\d]+)$
+            
           - type: script
             dest: contrib/minizip/
             dest-filename: autogen.sh
@@ -112,6 +119,10 @@ modules:
             url: 'https://github.com/P-H-C/phc-winner-argon2.git'
             tag: '20190702'
             commit: 62358ba2123abd17fccf2a108a301d4b52c01a7c
+            x-checker-data:
+              type: git
+              tag-pattern: ^(\d+)$
+              
         post-install:
           - install -Dm644 -t /app/share/licenses/libargon2 LICENSE
         cleanup:
@@ -131,8 +142,11 @@ modules:
         sources:
           - type: git
             url: https://github.com/randombit/botan.git
-            tag: 3.3.0
-            commit: 9074b04c1303a24e2084f8325fa570a5ad4f2478
+            tag: 3.6.1
+            commit: d1ad41eef0d7039f79ac89d180f0d697936b09f1
+            x-checker-data:
+              type: git
+              tag-pattern: ^(\d+[\.\d]+)$
         post-install:
           - install -Dm644 -t /app/share/licenses/botan license.txt
 
@@ -142,8 +156,11 @@ modules:
         sources:
           - type: git
             url: https://github.com/LudovicRousseau/PCSC
-            tag: 2.0.0
-            commit: 549922c1355fdd1e85eb0a952fefda7bb96e286a
+            tag: 2.3.0
+            commit: a2c25c5fa25b5e2400fe6a002ea2263069ebd94f
+            x-checker-data:
+              type: git
+              tag-pattern: ^(\d+[\.\d]+)$
         cleanup:
           - /bin
         post-install:
@@ -157,7 +174,11 @@ modules:
                         asciidoctor-2.0.22.gem
         sources:
           - type: file
-            url: https://rubygems.org/downloads/asciidoctor-2.0.22.gem
-            sha256: a6d8f1bb593a3617c0334fdf36b1e25186c4f4d0e15636538c5811de9bb1cad6
+            url: https://rubygems.org/downloads/asciidoctor-2.0.23.gem
+            sha256: 52208807f237dfa0ca29882f8b13d60b820496116ad191cf197ca56f2b7fddf3
+            x-checker-data:
+            type: anitya
+            project-id: 4258
+            url-template": https://rubygems.org/downloads/asciidoctor-$version.gem
         cleanup:
           - '*'

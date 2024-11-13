@@ -24,7 +24,7 @@ finish-args:
   - --own-name=org.freedesktop.secrets
     # Favicon Download
   - --share=network
-    # YubiKey USB access4258
+    # YubiKey USB access
   - --device=all
     # Nitrokey Smartcard access
   - --socket=pcsc

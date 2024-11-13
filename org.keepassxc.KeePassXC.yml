@@ -170,11 +170,12 @@ modules:
         build-commands:
           - gem install --ignore-dependencies --no-user-install --verbose --local
                         --install-dir /app/lib/ruby/gems/2.7.1 --bindir /app/bin
-                        asciidoctor-2.0.22.gem
+                        asciidoctor.gem
         sources:
           - type: file
             url: https://rubygems.org/downloads/asciidoctor-2.0.23.gem
             sha256: 52208807f237dfa0ca29882f8b13d60b820496116ad191cf197ca56f2b7fddf3
+            dest-filename: asciidoctor.gem
             x-checker-data:
               type: anitya
               project-id: 4258

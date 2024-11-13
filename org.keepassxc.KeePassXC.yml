@@ -97,7 +97,6 @@ modules:
             x-checker-data:
               type: git
               tag-pattern: ^v(\d+[\.\d]+)$
-            
           - type: script
             dest: contrib/minizip/
             dest-filename: autogen.sh

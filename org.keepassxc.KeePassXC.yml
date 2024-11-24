@@ -71,6 +71,9 @@ modules:
         url: https://github.com/keepassxreboot/keepassxc.git
         tag: 2.7.9
         commit: 8f6dd13b0add1dd3fb666cc43ae1e5db478b1827
+        x-checker-data:
+          type: git
+          tag-pattern: ^([\d.]+)$
     post-install:
       - install -Dm755 ./utils/keepassxc-flatpak-wrapper.sh /app/bin/keepassxc-wrapper
       - |
@@ -91,6 +94,10 @@ modules:
             url: 'https://github.com/madler/zlib'
             tag: 'v1.3'
             commit: 09155eaa2f9270dc4ed1fa13e2b4b2613e6e4851
+            x-checker-data:
+              type: git
+              tag-pattern: ^v([\d.]+)$
+
           - type: script
             dest: contrib/minizip/
             dest-filename: autogen.sh
@@ -112,6 +119,9 @@ modules:
             url: 'https://github.com/P-H-C/phc-winner-argon2.git'
             tag: '20190702'
             commit: 62358ba2123abd17fccf2a108a301d4b52c01a7c
+            x-checker-data:
+              type: git
+              tag-pattern: ^([\d]+)$
         post-install:
           - install -Dm644 -t /app/share/licenses/libargon2 LICENSE
         cleanup:
@@ -133,6 +143,9 @@ modules:
             url: https://github.com/randombit/botan.git
             tag: 3.3.0
             commit: 9074b04c1303a24e2084f8325fa570a5ad4f2478
+            x-checker-data:
+              type: git
+              tag-pattern: ^([\d.]+)$
         post-install:
           - install -Dm644 -t /app/share/licenses/botan license.txt
 
@@ -144,6 +157,9 @@ modules:
             url: https://github.com/LudovicRousseau/PCSC
             tag: 2.0.0
             commit: 549922c1355fdd1e85eb0a952fefda7bb96e286a
+            x-checker-data:
+              type: git
+              tag-pattern: ^([\d.]+)$
         cleanup:
           - /bin
         post-install:
@@ -159,5 +175,9 @@ modules:
           - type: file
             url: https://rubygems.org/downloads/asciidoctor-2.0.22.gem
             sha256: a6d8f1bb593a3617c0334fdf36b1e25186c4f4d0e15636538c5811de9bb1cad6
+            x-checker-data:
+              type: anitya
+              project-id: 4258
+              url-template: https://rubygems.org/gems/asciidoctor-$version.gem
         cleanup:
           - '*'

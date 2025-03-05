@@ -69,8 +69,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/keepassxreboot/keepassxc.git
-        tag: 2.7.9
-        commit: 8f6dd13b0add1dd3fb666cc43ae1e5db478b1827
+        tag: 2.7.10
+        commit: b342be457153aa098c8bbce0f8b0fd3baa8c158f
     post-install:
       - install -Dm755 ./utils/keepassxc-flatpak-wrapper.sh /app/bin/keepassxc-wrapper
       - |
@@ -89,8 +89,8 @@ modules:
         sources:
           - type: git
             url: 'https://github.com/madler/zlib'
-            tag: 'v1.3'
-            commit: 09155eaa2f9270dc4ed1fa13e2b4b2613e6e4851
+            tag: 'v1.3.1'
+            commit: 51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf
           - type: script
             dest: contrib/minizip/
             dest-filename: autogen.sh
@@ -131,8 +131,8 @@ modules:
         sources:
           - type: git
             url: https://github.com/randombit/botan.git
-            tag: 3.3.0
-            commit: 9074b04c1303a24e2084f8325fa570a5ad4f2478
+            tag: 3.7.1
+            commit: 09cc7f97ceb828c19461b2a63f820d3226bb921b
         post-install:
           - install -Dm644 -t /app/share/licenses/botan license.txt
 
@@ -154,10 +154,10 @@ modules:
         build-commands:
           - gem install --ignore-dependencies --no-user-install --verbose --local
                         --install-dir /app/lib/ruby/gems/2.7.1 --bindir /app/bin
-                        asciidoctor-2.0.22.gem
+                        asciidoctor-2.0.23.gem
         sources:
           - type: file
-            url: https://rubygems.org/downloads/asciidoctor-2.0.22.gem
-            sha256: a6d8f1bb593a3617c0334fdf36b1e25186c4f4d0e15636538c5811de9bb1cad6
+            url: https://rubygems.org/downloads/asciidoctor-2.0.23.gem
+            sha256: 52208807f237dfa0ca29882f8b13d60b820496116ad191cf197ca56f2b7fddf3
         cleanup:
           - '*'

@@ -1,6 +1,6 @@
 id: org.keepassxc.KeePassXC
 runtime: org.kde.Platform
-runtime-version: '5.15-24.08'
+runtime-version: '5.15-25.08'
 sdk: org.kde.Sdk
 command: keepassxc-wrapper
 finish-args:
@@ -81,10 +81,7 @@ modules:
       - /share/man
 
     modules:
-
-      - shared-modules/libusb/libusb.json
-
-      - name: minizip
+    - name: minizip
         subdir: contrib/minizip
         sources:
           - type: git

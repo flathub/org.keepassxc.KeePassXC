@@ -81,7 +81,7 @@ modules:
       - /share/man
 
     modules:
-    - name: minizip
+      - name: minizip
         subdir: contrib/minizip
         sources:
           - type: git

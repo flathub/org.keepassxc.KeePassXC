@@ -149,13 +149,6 @@ modules:
         post-install:
           - install -Dm644 -t /app/share/licenses/pcsclite COPYING
 
-      - name: ruby # required for asciidoctor
-        sources:
-          - type: archive
-            url: https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.7.tar.gz
-            sha256: 23815a6d095696f7919090fdc3e2f9459b2c83d57224b2e446ce1f5f7333ef36
-        cleanup: '*'
-
       - name: asciidoctor
         buildsystem: simple
         build-commands:
@@ -168,3 +161,11 @@ modules:
             sha256: 52208807f237dfa0ca29882f8b13d60b820496116ad191cf197ca56f2b7fddf3
         cleanup:
           - '*'
+        modules:
+          - name: ruby
+            sources:
+              - type: archive
+                url: https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.7.tar.gz
+                sha256: 23815a6d095696f7919090fdc3e2f9459b2c83d57224b2e446ce1f5f7333ef36
+            cleanup:
+              - '*'

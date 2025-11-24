@@ -69,8 +69,10 @@ modules:
     sources:
       - type: git
         url: https://github.com/keepassxreboot/keepassxc.git
-        tag: 2.7.10
-        commit: b342be457153aa098c8bbce0f8b0fd3baa8c158f
+        tag: 2.7.11
+        commit: 01e5b6ee1d3e8fdef203505c645962696cb8d97c
+      - type: patch
+        path: keepassxc-desktop-xml.patch
     post-install:
       - install -Dm755 ./utils/keepassxc-flatpak-wrapper.sh /app/bin/keepassxc-wrapper
       - |

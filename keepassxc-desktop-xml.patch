@@ -1,0 +1,20 @@
+diff --git a/share/linux/org.keepassxc.KeePassXC.appdata.xml b/share/linux/org.keepassxc.KeePassXC.appdata.xml
+index 624be16..c9ba1ba 100644
+--- a/share/linux/org.keepassxc.KeePassXC.appdata.xml
++++ b/share/linux/org.keepassxc.KeePassXC.appdata.xml
+@@ -47,6 +47,7 @@
+   <releases>
+     <release version="2.7.11" date="2025-11-23" type="stable">
+       <description>
++      <ul>
+         <li>Add image, HTML, Markdown preview, and text editing support to inline attachment viewer [#12085, #12244, #12654]</li>
+         <li>Add database merge confirmation dialog [#10173]</li>
+         <li>Add option to auto-generate a password for new entries [#12593]</li>
+@@ -110,6 +111,7 @@
+         <li>Windows: Remove broken check for MSVC Redistributable from MSI installer [#11950]</li>
+         <li>Linux: Fix startup delay due to StartupNotify setting in desktop file [#12306]</li>
+         <li>Linux: Fix memory initialisation when --pw-stdin is used with a pipe [#12050]</li>
++      </ul>
+       </description>
+     </release>
+     <release version="2.7.10" date="2025-03-02" type="stable">

@@ -69,10 +69,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/keepassxreboot/keepassxc.git
-        tag: 2.7.11
-        commit: 01e5b6ee1d3e8fdef203505c645962696cb8d97c
-      - type: patch
-        path: keepassxc-desktop-xml.patch
+        tag: 2.7.12
+        commit: 860e51d8e9a5a67e73de79b173ae9bd5bdb5ebda
     post-install:
       - install -Dm755 ./utils/keepassxc-flatpak-wrapper.sh /app/bin/keepassxc-wrapper
       - |
@@ -130,8 +128,8 @@ modules:
         sources:
           - type: git
             url: https://github.com/randombit/botan.git
-            tag: 3.7.1
-            commit: 09cc7f97ceb828c19461b2a63f820d3226bb921b
+            tag: 3.10.0
+            commit: e27d332089247f04e89854a2e60a3af2ec4e430f
         post-install:
           - install -Dm644 -t /app/share/licenses/botan license.txt
 
@@ -142,10 +140,8 @@ modules:
         sources:
           - type: git
             url: https://github.com/LudovicRousseau/PCSC
-            tag: 2.3.3
-            commit: 3ef55e02979de6834015b380c1d21671eeb4e9f5
-          - type: patch
-            path: pcsc-lite-protocol.patch
+            tag: 2.4.1
+            commit: 5a96d5b1c6a3658c581a793d01f6a00e1a44e360
         cleanup:
           - /bin
         post-install:
@@ -156,18 +152,18 @@ modules:
         build-commands:
           - gem install --ignore-dependencies --no-user-install --verbose --local
                         --install-dir /app/lib/ruby/gems/2.7.1 --bindir /app/bin
-                        asciidoctor-2.0.23.gem
+                        asciidoctor-2.0.26.gem
         sources:
           - type: file
-            url: https://rubygems.org/downloads/asciidoctor-2.0.23.gem
-            sha256: 52208807f237dfa0ca29882f8b13d60b820496116ad191cf197ca56f2b7fddf3
+            url: https://rubygems.org/downloads/asciidoctor-2.0.26.gem
+            sha256: 16e3accf1fc206bbd6335848649d7fd65f31d2daa60d85af13d47a8ee4b071c1
         cleanup:
           - '*'
         modules:
           - name: ruby
             sources:
               - type: archive
-                url: https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.7.tar.gz
-                sha256: 23815a6d095696f7919090fdc3e2f9459b2c83d57224b2e446ce1f5f7333ef36
+                url: https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.9.tar.gz
+                sha256: 7bb4d4f5e807cc27251d14d9d6086d182c5b25875191e44ab15b709cd7a7dd9c
             cleanup:
               - '*'

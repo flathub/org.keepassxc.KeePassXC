@@ -86,8 +86,10 @@ modules:
         sources:
           - type: git
             url: 'https://github.com/madler/zlib'
-            tag: 'v1.3.1'
-            commit: 51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf
+            tag: 'v1.3.2'
+            commit: da607da739fa6047df13e66a2af6b8bec7c2a498
+          - type: patch
+            path: minizip-ints-h.patch
           - type: script
             dest: contrib/minizip/
             dest-filename: autogen.sh

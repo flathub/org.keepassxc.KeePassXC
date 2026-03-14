@@ -1,0 +1,12 @@
+diff --git a/contrib/minizip/Makefile.am b/contrib/minizip/Makefile.am
+index d343011..b7dea4f 100644
+--- a/contrib/minizip/Makefile.am
++++ b/contrib/minizip/Makefile.am
+@@ -27,6 +27,7 @@ libminizip_la_LDFLAGS = $(AM_LDFLAGS) -version-info 1:0:0 -lz
+ minizip_includedir = $(includedir)/minizip
+ minizip_include_HEADERS = \
+ 	crypt.h \
++	ints.h \
+ 	ioapi.h \
+ 	mztools.h \
+ 	unzip.h \

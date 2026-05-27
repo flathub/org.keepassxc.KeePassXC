@@ -69,8 +69,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/keepassxreboot/keepassxc.git
-        branch: develop
-        commit: 02784b0eee44426d505227aec20db33720f4c2c7
+        commit: b9bcbfc592e4b23d44e084ae2c2f3fdf8c9ed5cd
     post-install:
       - install -Dm755 ./utils/keepassxc-flatpak-wrapper.sh /app/bin/keepassxc-wrapper
       - |
@@ -157,4 +156,5 @@ modules:
         sources:
           - type: git
             tag: v1.6.3
+            commit: cb3bb194cca88211cbfcdde2f10c0f43c3fb8ec3
             url: https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/keyutils.git

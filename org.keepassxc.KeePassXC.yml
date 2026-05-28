@@ -20,8 +20,6 @@ finish-args:
   - --talk-name=com.canonical.Unity.Session
     # System Tray Icon (Test at every major update)
   - --talk-name=org.kde.StatusNotifierWatcher
-    # Startup Application
-  - --talk-name=org.freedesktop.portal.Background
     # Secret Service
   - --own-name=org.freedesktop.secrets
     # Favicon Download

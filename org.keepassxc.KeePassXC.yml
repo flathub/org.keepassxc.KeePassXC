@@ -20,6 +20,8 @@ finish-args:
   - --talk-name=com.canonical.Unity.Session
     # System Tray Icon (Test at every major update)
   - --talk-name=org.kde.StatusNotifierWatcher
+    # Startup Application
+  - --talk-name=org.freedesktop.portal.Background
     # Secret Service
   - --own-name=org.freedesktop.secrets
     # Favicon Download
@@ -55,17 +57,13 @@ cleanup:
 modules:
   - name: keepassxc
     buildsystem: cmake-ninja
-    build-options:
-      env:
-        GEM_PATH: /app/lib/ruby/gems/2.7.1
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
       - -DKEEPASSXC_DIST_TYPE=Flatpak
-      - -DKEEPASSXC_BUILD_TYPE=Release
+      - -DKEEPASSXC_BUILD_TYPE=Snapshot
       - -DWITH_TESTS=OFF
       - -DCMAKE_INSTALL_LIBDIR=lib
-      - -DWITH_XC_UPDATECHECK=OFF
-      - -DWITH_XC_ALL=ON
+      - -DKPXC_FEATURE_UPDATES=OFF
     sources:
       - type: git
         url: https://github.com/keepassxreboot/keepassxc.git

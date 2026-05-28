@@ -148,7 +148,9 @@ modules:
       - name: keyutils
         buildsystem: simple
         build-commands:
-          - make PREFIX='/app' SBINDIR='/app/bin' BINDIR='/app/bin' LIBDIR='/app/lib' USRLIBDIR='/app/lib' SHAREDIR='/app/share/keyutils' MANDIR='/app/share/man' INCLUDEDIR='/app/include' install
+          - make PREFIX='/app' SBINDIR='/app/bin' BINDIR='/app/bin' LIBDIR='/app/lib' USRLIBDIR='/app/lib'
+                  SHAREDIR='/app/share/keyutils' MANDIR='/app/share/man' INCLUDEDIR='/app/include'
+                  install
         sources:
           - type: git
             tag: v1.6.3

@@ -127,9 +127,7 @@ modules:
       - name: asciidoctor
         buildsystem: simple
         build-commands:
-          - gem install --ignore-dependencies --no-user-install --verbose --local
-                        --install-dir /app/lib/ruby/gems/2.7.1 --bindir /app/bin
-                        asciidoctor-2.0.26.gem
+          - gem install --local asciidoctor-2.0.26.gem
         sources:
           - type: file
             url: https://rubygems.org/downloads/asciidoctor-2.0.26.gem

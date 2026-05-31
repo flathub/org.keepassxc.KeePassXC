@@ -1,6 +1,6 @@
 id: org.keepassxc.KeePassXC
 runtime: org.kde.Platform
-runtime-version: '5.15-24.08'
+runtime-version: '6.10'
 sdk: org.kde.Sdk
 command: keepassxc-wrapper
 finish-args:
@@ -55,22 +55,17 @@ cleanup:
 modules:
   - name: keepassxc
     buildsystem: cmake-ninja
-    build-options:
-      env:
-        GEM_PATH: /app/lib/ruby/gems/2.7.1
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
       - -DKEEPASSXC_DIST_TYPE=Flatpak
-      - -DKEEPASSXC_BUILD_TYPE=Release
+      - -DKEEPASSXC_BUILD_TYPE=Snapshot
       - -DWITH_TESTS=OFF
       - -DCMAKE_INSTALL_LIBDIR=lib
-      - -DWITH_XC_UPDATECHECK=OFF
-      - -DWITH_XC_ALL=ON
+      - -DKPXC_FEATURE_UPDATES=OFF
     sources:
       - type: git
         url: https://github.com/keepassxreboot/keepassxc.git
-        tag: 2.7.10
-        commit: b342be457153aa098c8bbce0f8b0fd3baa8c158f
+        commit: b9bcbfc592e4b23d44e084ae2c2f3fdf8c9ed5cd
     post-install:
       - install -Dm755 ./utils/keepassxc-flatpak-wrapper.sh /app/bin/keepassxc-wrapper
       - |
@@ -81,41 +76,20 @@ modules:
       - /share/man
 
     modules:
-
-      - shared-modules/libusb/libusb.json
-
       - name: minizip
         subdir: contrib/minizip
         sources:
           - type: git
             url: 'https://github.com/madler/zlib'
-            tag: 'v1.3.1'
-            commit: 51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf
+            tag: 'v1.3.2'
+            commit: da607da739fa6047df13e66a2af6b8bec7c2a498
+          - type: patch
+            path: minizip-ints-h.patch
           - type: script
             dest: contrib/minizip/
             dest-filename: autogen.sh
             commands:
               - autoreconf -ifv
-
-      - name: libargon2
-        no-autogen: true
-        make-args:
-          - PREFIX=/app
-          - OPTTARGET=none
-          - LIBRARY_REL=lib
-        make-install-args:
-          - PREFIX=/app
-          - OPTTARGET=none
-          - LIBRARY_REL=lib
-        sources:
-          - type: git
-            url: 'https://github.com/P-H-C/phc-winner-argon2.git'
-            tag: '20190702'
-            commit: 62358ba2123abd17fccf2a108a301d4b52c01a7c
-        post-install:
-          - install -Dm644 -t /app/share/licenses/libargon2 LICENSE
-        cleanup:
-          - /bin
 
       - name: botan
         buildsystem: simple
@@ -131,8 +105,8 @@ modules:
         sources:
           - type: git
             url: https://github.com/randombit/botan.git
-            tag: 3.7.1
-            commit: 09cc7f97ceb828c19461b2a63f820d3226bb921b
+            tag: 3.12.0
+            commit: 45d6f286c320b2f2efd5373d195ec88c367e3071
         post-install:
           - install -Dm644 -t /app/share/licenses/botan license.txt
 
@@ -143,8 +117,8 @@ modules:
         sources:
           - type: git
             url: https://github.com/LudovicRousseau/PCSC
-            tag: 2.3.3
-            commit: 3ef55e02979de6834015b380c1d21671eeb4e9f5
+            tag: 2.4.1
+            commit: 5a96d5b1c6a3658c581a793d01f6a00e1a44e360
         cleanup:
           - /bin
         post-install:
@@ -153,12 +127,30 @@ modules:
       - name: asciidoctor
         buildsystem: simple
         build-commands:
-          - gem install --ignore-dependencies --no-user-install --verbose --local
-                        --install-dir /app/lib/ruby/gems/2.7.1 --bindir /app/bin
-                        asciidoctor-2.0.23.gem
+          - gem install --local asciidoctor-2.0.26.gem
         sources:
           - type: file
-            url: https://rubygems.org/downloads/asciidoctor-2.0.23.gem
-            sha256: 52208807f237dfa0ca29882f8b13d60b820496116ad191cf197ca56f2b7fddf3
+            url: https://rubygems.org/downloads/asciidoctor-2.0.26.gem
+            sha256: 16e3accf1fc206bbd6335848649d7fd65f31d2daa60d85af13d47a8ee4b071c1
         cleanup:
           - '*'
+        modules:
+          - name: ruby
+            sources:
+              - type: archive
+                url: https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.9.tar.gz
+                sha256: 7bb4d4f5e807cc27251d14d9d6086d182c5b25875191e44ab15b709cd7a7dd9c
+            cleanup:
+              - '*'
+
+      - name: keyutils
+        buildsystem: simple
+        build-commands:
+          - make PREFIX='/app' SBINDIR='/app/bin' BINDIR='/app/bin' LIBDIR='/app/lib' USRLIBDIR='/app/lib'
+                  SHAREDIR='/app/share/keyutils' MANDIR='/app/share/man' INCLUDEDIR='/app/include'
+                  install
+        sources:
+          - type: git
+            tag: v1.6.3
+            commit: cb3bb194cca88211cbfcdde2f10c0f43c3fb8ec3
+            url: https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/keyutils.git

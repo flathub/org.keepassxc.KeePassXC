@@ -30,18 +30,12 @@ finish-args:
   - --socket=pcsc
     # SSH Agent access
   - --socket=ssh-auth
-  - --env=SSH_AUTH_SOCK=$SSH_AUTH_SOCK
-    # Host access: workaround extensive portal issues
-    # (use beta branch for testing of portals based file access)
-  - --filesystem=host
     # Access to temporary files (Remove if RuntimeDirectory patch is upstreamed)
   - --filesystem=/tmp
     # Required for native messaging (Tor browser)
-    # TODO uncomment when host access is no longer required.
-    # - --filesystem=xdg-data
+  - --filesystem=xdg-data
     # Required for native messaging (Non-Firefox)
-    # TODO uncomment when host access is no longer required.
-    # - --filesystem=xdg-config
+  - --filesystem=xdg-config
     # Network filesystems
   - --filesystem=xdg-run/gvfs
 cleanup:

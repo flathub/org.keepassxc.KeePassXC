@@ -65,7 +65,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/keepassxreboot/keepassxc.git
-        commit: feb8c245e19aa70c4b816e7767c81e1160c047da
+        commit: 9e0f57a4a4c6c629fa6d0a593acb7d089b1d95cd
     post-install:
       - install -Dm755 ./utils/keepassxc-flatpak-wrapper.sh /app/bin/keepassxc-wrapper
       - |

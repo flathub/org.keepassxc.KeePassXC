@@ -1,6 +1,6 @@
 id: org.keepassxc.KeePassXC
 runtime: org.kde.Platform
-runtime-version: '5.15-25.08'
+runtime-version: '6.10'
 sdk: org.kde.Sdk
 command: keepassxc-wrapper
 finish-args:
@@ -55,22 +55,18 @@ cleanup:
 modules:
   - name: keepassxc
     buildsystem: cmake-ninja
-    build-options:
-      env:
-        GEM_PATH: /app/lib/ruby/gems/2.7.1
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
       - -DKEEPASSXC_DIST_TYPE=Flatpak
       - -DKEEPASSXC_BUILD_TYPE=Release
       - -DWITH_TESTS=OFF
       - -DCMAKE_INSTALL_LIBDIR=lib
-      - -DWITH_XC_UPDATECHECK=OFF
-      - -DWITH_XC_ALL=ON
+      - -DKPXC_FEATURE_UPDATES=OFF
     sources:
       - type: git
         url: https://github.com/keepassxreboot/keepassxc.git
-        tag: 2.7.12
-        commit: 860e51d8e9a5a67e73de79b173ae9bd5bdb5ebda
+        tag: 2.8.0
+        commit: 1c2f23ef5914c0f442a00533def1689857afb5a7
     post-install:
       - install -Dm755 ./utils/keepassxc-flatpak-wrapper.sh /app/bin/keepassxc-wrapper
       - |
@@ -96,26 +92,6 @@ modules:
             commands:
               - autoreconf -ifv
 
-      - name: libargon2
-        no-autogen: true
-        make-args:
-          - PREFIX=/app
-          - OPTTARGET=none
-          - LIBRARY_REL=lib
-        make-install-args:
-          - PREFIX=/app
-          - OPTTARGET=none
-          - LIBRARY_REL=lib
-        sources:
-          - type: git
-            url: 'https://github.com/P-H-C/phc-winner-argon2.git'
-            tag: '20190702'
-            commit: 62358ba2123abd17fccf2a108a301d4b52c01a7c
-        post-install:
-          - install -Dm644 -t /app/share/licenses/libargon2 LICENSE
-        cleanup:
-          - /bin
-
       - name: botan
         buildsystem: simple
         build-commands:
@@ -130,8 +106,8 @@ modules:
         sources:
           - type: git
             url: https://github.com/randombit/botan.git
-            tag: 3.10.0
-            commit: e27d332089247f04e89854a2e60a3af2ec4e430f
+            tag: 3.13.0
+            commit: 2a81eef56c96c237e590c27f9a75e60317c9c700
         post-install:
           - install -Dm644 -t /app/share/licenses/botan license.txt
 
@@ -152,9 +128,7 @@ modules:
       - name: asciidoctor
         buildsystem: simple
         build-commands:
-          - gem install --ignore-dependencies --no-user-install --verbose --local
-                        --install-dir /app/lib/ruby/gems/2.7.1 --bindir /app/bin
-                        asciidoctor-2.0.26.gem
+          - gem install --local asciidoctor-2.0.26.gem
         sources:
           - type: file
             url: https://rubygems.org/downloads/asciidoctor-2.0.26.gem
@@ -165,7 +139,19 @@ modules:
           - name: ruby
             sources:
               - type: archive
-                url: https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.9.tar.gz
-                sha256: 7bb4d4f5e807cc27251d14d9d6086d182c5b25875191e44ab15b709cd7a7dd9c
+                url: https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.7.tar.gz
+                sha256: 911ace20f90d068ca0e4dda6d0e4f0f81e52e52f2dd4f4004c721e253412e82d
             cleanup:
               - '*'
+
+      - name: keyutils
+        buildsystem: simple
+        build-commands:
+          - make PREFIX='/app' SBINDIR='/app/bin' BINDIR='/app/bin' LIBDIR='/app/lib' USRLIBDIR='/app/lib'
+                  SHAREDIR='/app/share/keyutils' MANDIR='/app/share/man' INCLUDEDIR='/app/include'
+                  install
+        sources:
+          - type: git
+            tag: v1.6.3
+            commit: cb3bb194cca88211cbfcdde2f10c0f43c3fb8ec3
+            url: https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/keyutils.git
